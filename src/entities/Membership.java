@@ -1,6 +1,6 @@
 package entities;
 
-public class Membership {
+public abstract class Membership {
 	
 	public enum Type {
 		ML, VL, TV, PR
@@ -21,5 +21,7 @@ public class Membership {
 	public Type getType() {
 		return this.type;
 	}
+	
+	public abstract AccessRule getRules();
 
 }

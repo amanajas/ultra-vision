@@ -1,12 +1,17 @@
-package facades;
+package db;
 
 import java.util.List;
 
-import db.IDatabase;
 import entities.Rental;
 import entities.User;
 
 public class Database implements IDatabase {
+	
+	private SQLDatabase db;
+	
+	public Database() {
+		this.db = new SQLDatabase();
+	}
 
 	@Override
 	public List<User> getCustomers() {
