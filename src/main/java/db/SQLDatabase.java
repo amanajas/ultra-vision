@@ -16,7 +16,7 @@ public class SQLDatabase {
 	private String path;
 	
 	public SQLDatabase(String path) {
-		this.path = "jdbc:sqlite:sqlite/db/" + path;
+		this.path = "jdbc:sqlite:sqlite/" + path;
 	}
 	
 	private void openSQLSchema(Connection conn) {
