@@ -9,7 +9,7 @@ public class Premium extends Membership {
 
 	public Premium(int id, String description) {
 		super(id, description, Membership.Type.PR);
-		this.rule = new AccessRule("Premium", 
+		this.rule = new AccessRule(description, 
 				Membership.Type.ML,
 				Membership.Type.VL,
 				Membership.Type.TV,

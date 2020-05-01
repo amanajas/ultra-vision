@@ -2,7 +2,7 @@ package entities;
 
 public abstract class Membership {
 	
-	public enum Type {
+	public static enum Type {
 		ML, VL, TV, PR
 	}
 	

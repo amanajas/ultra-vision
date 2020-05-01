@@ -106,7 +106,9 @@ public class SQLDatabase {
         	conn = DriverManager.getConnection(this.path);
             if (conn != null) {
             	
-            	Statement stmt = conn.createStatement();
+            	Statement stmt = conn.createStatement(
+            			ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_UPDATABLE);
             	System.out.println(sql);
             	response = stmt.executeQuery(sql);
             }

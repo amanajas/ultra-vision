@@ -1,33 +1,41 @@
 package db.entities;
 
-import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
+import db.SQLDatabase;
+import db.dao.DAO;
 import db.dao.ICardsDAO;
 import entities.Card;
 import entities.User;
 
-public class CardsDAO implements ICardsDAO {
+public class CardsDAO extends DAO implements ICardsDAO {
+
+	public CardsDAO(SQLDatabase db) {
+		super(db);
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
-	public boolean insertCard(User user) {
+	public boolean insertCard(User user) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean updateCard(User user) {
+	public boolean updateCard(User user) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean deleteCard(User user) {
+	public boolean deleteCard(User user) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public ResultSet get(Card card) {
+	public List<Card> get(int user) throws SQLException {
 		// TODO Auto-generated method stub
 		return null;
 	}

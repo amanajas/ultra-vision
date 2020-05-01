@@ -9,7 +9,7 @@ public class MusicLovers extends Membership {
 
 	public MusicLovers(int id, String description) {
 		super(id, description, Membership.Type.ML);
-		this.rule = new AccessRule("Music Lovers", 
+		this.rule = new AccessRule(description, 
 				Membership.Type.ML);
 	}
 

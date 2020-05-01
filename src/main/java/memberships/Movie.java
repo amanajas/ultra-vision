@@ -9,7 +9,7 @@ public class Movie extends Membership {
 
 	public Movie(int id, String description) {
 		super(id, description, Membership.Type.VL);
-		this.rule = new AccessRule("Movie", 
+		this.rule = new AccessRule(description, 
 				Membership.Type.VL);
 	}
 
