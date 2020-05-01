@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+version = '1.0-SNAPSHOT' 
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+}
+
+dependencies {
+   compile  'log4j:log4j:1.2.16'
+} 
