@@ -13,5 +13,15 @@ jar {
 }
 
 dependencies {
-   compile  'log4j:log4j:1.2.16'
-} 
+   compile 'org.xerial:sqlite-jdbc:3.8.9.1'   
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()      
+    }
+    dependencies {
+        classpath 'org.xerial:sqlite-jdbc:3.8.9.1'
+    }
+}
