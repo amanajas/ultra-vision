@@ -73,4 +73,9 @@ public class Database implements IDatabase {
 		return null;
 	}
 
+	@Override
+	public SQLDatabase getDb() {
+		return this.db;
+	}
+
 }
