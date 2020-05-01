@@ -14,9 +14,11 @@ import java.sql.DatabaseMetaData;
 public class SQLDatabase {
 	
 	private String path;
+	private String dir;
 	
 	public SQLDatabase(String path) {
-		this.path = "jdbc:sqlite:sqlite/" + path;
+		this.dir = "sqlite/" + path;
+		this.path = "jdbc:sqlite:" + this.dir;
 	}
 	
 	private void openSQLSchema(Connection conn) {
@@ -61,7 +63,7 @@ public class SQLDatabase {
 	}
 	
 	public Boolean create() {
-		File f = new File(this.path);
+		File f = new File(this.dir);
 		if (f.exists()) {
 			System.out.println("Database already exists!");
 			return true;		
