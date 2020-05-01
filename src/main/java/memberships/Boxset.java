@@ -7,8 +7,8 @@ public class Boxset extends Membership {
 	
 	private AccessRule rule;
 
-	public Boxset() {
-		super("(TV) Boxset", Membership.Type.TV);
+	public Boxset(int id, String description) {
+		super(id, description, Membership.Type.TV);
 		this.rule = new AccessRule("Boxset", 
 				Membership.Type.TV);
 	}

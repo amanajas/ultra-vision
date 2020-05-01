@@ -8,10 +8,12 @@ public class Card {
 	
 	private int id;
 	private Type type;
+	private User user;
 	
-	public Card(int id, Type type) {
+	public Card(int id, Type type, User user) {
 		this.id = id;
 		this.type = type;
+		this.user = user;
 	}
 	
 	public int getId() {
@@ -20,5 +22,9 @@ public class Card {
 	
 	public Type getType() {
 		return type;
+	}
+	
+	public User getUser() {
+		return user;
 	}
 }

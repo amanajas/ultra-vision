@@ -6,10 +6,12 @@ public abstract class Membership {
 		ML, VL, TV, PR
 	}
 	
+	private int id;
 	private Type type;
 	private String description;
 	
-	public Membership(String description, Type type) {
+	public Membership(int id, String description, Type type) {
+		this.id = id;
 		this.description = description;
 		this.type = type;
 	}
@@ -20,6 +22,10 @@ public abstract class Membership {
 	
 	public Type getType() {
 		return this.type;
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 	
 	public abstract AccessRule getRules();

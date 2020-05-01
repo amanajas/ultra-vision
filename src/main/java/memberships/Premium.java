@@ -7,8 +7,8 @@ public class Premium extends Membership {
 	
 	private AccessRule rule;
 
-	public Premium() {
-		super("(PR) Premium", Membership.Type.PR);
+	public Premium(int id, String description) {
+		super(id, description, Membership.Type.PR);
 		this.rule = new AccessRule("Premium", 
 				Membership.Type.ML,
 				Membership.Type.VL,

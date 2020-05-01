@@ -9,8 +9,8 @@ public class Database implements IDatabase {
 	
 	private SQLDatabase db;
 	
-	public Database() {
-		this.db = new SQLDatabase();
+	public Database(SQLDatabase db) {
+		this.db = db;
 	}
 
 	@Override

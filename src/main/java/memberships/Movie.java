@@ -7,8 +7,8 @@ public class Movie extends Membership {
 	
 	private AccessRule rule;
 
-	public Movie() {
-		super("(VL) Movie", Membership.Type.VL);
+	public Movie(int id, String description) {
+		super(id, description, Membership.Type.VL);
 		this.rule = new AccessRule("Movie", 
 				Membership.Type.VL);
 	}
