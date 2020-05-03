@@ -19,7 +19,15 @@ public class CardsDAO extends DAO implements ICardsDAO {
 
 	@Override
 	public boolean insertCard(Card card) throws SQLException {
-		// TODO Auto-generated method stub
+		String sql = "﻿INSERT INTO cards " +
+                "(user_id', 'type_id') " +
+                "VALUES (#1, #2);";
+                
+                sql = sql.replace("#1", card.getType().toString());
+                sql = sql.replace("#2", String.valueOf(card.getUser()));
+                
+                System.out.print(this.db.query(sql).toString());
+                
 		return false;
 	}
 

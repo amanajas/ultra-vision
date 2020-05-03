@@ -1,64 +1,64 @@
-CREATE TABLE card_types ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
+CREATE TABLE IF NOT EXISTS  card_types ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
+	description TEXT NOT NULL    
+ );
+
+CREATE TABLE IF NOT EXISTS  membership_type ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	description          text NOT NULL    
  );
 
-CREATE TABLE membership_type ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
-	description          text NOT NULL    
- );
-
-CREATE TABLE memberships ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
+CREATE TABLE IF NOT EXISTS  memberships ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	description          text NOT NULL    ,
 	type_id              integer NOT NULL    ,
 	FOREIGN KEY ( type_id ) REFERENCES membership_type( id )  
  );
 
-CREATE TABLE rental_category ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
+CREATE TABLE IF NOT EXISTS  rental_category ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	description          text NOT NULL    
  );
 
-CREATE TABLE rentals ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
+CREATE TABLE IF NOT EXISTS  rentals ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	title                text NOT NULL    ,
 	created              datetime NOT NULL DEFAULT CURRENT_TIMESTAMP   ,
 	category_id          integer NOT NULL    ,
 	FOREIGN KEY ( category_id ) REFERENCES rental_category( id )  
  );
 
-CREATE TABLE users ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
+CREATE TABLE IF NOT EXISTS  users ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	name                 text NOT NULL    ,
 	member_id            integer NOT NULL    ,
 	FOREIGN KEY ( member_id ) REFERENCES memberships( id )  
  );
 
-CREATE TABLE access ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
+CREATE TABLE IF NOT EXISTS  access ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	password             text NOT NULL    ,
 	user_id              integer NOT NULL    ,
 	FOREIGN KEY ( user_id ) REFERENCES users( id )  
  );
 
-CREATE TABLE cards ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
+CREATE TABLE IF NOT EXISTS  cards ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	user_id              integer NOT NULL    ,
 	type_id              integer NOT NULL    ,
 	FOREIGN KEY ( user_id ) REFERENCES users( id ),
 	FOREIGN KEY ( type_id ) REFERENCES card_types( id ) 
  );
 
-CREATE TABLE loyalty ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
+CREATE TABLE IF NOT EXISTS  loyalty ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	points               integer NOT NULL DEFAULT 0   ,
 	user_id              integer NOT NULL    ,
 	FOREIGN KEY ( user_id ) REFERENCES users( id )  
  );
 
-CREATE TABLE rental_status ( 
-	id                   integer NOT NULL  PRIMARY KEY  ,
+CREATE TABLE IF NOT EXISTS  rental_status ( 
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	created              datetime  DEFAULT CURRENT_TIMESTAMP   ,
 	updated              datetime  DEFAULT CURRENT_TIMESTAMP   ,
 	status               boolean NOT NULL    ,
@@ -68,8 +68,8 @@ CREATE TABLE rental_status (
 	FOREIGN KEY ( rental_id ) REFERENCES rentals( id )  
  );
 
-INSERT INTO card_type( id, description ) VALUES ( 1, 'Credit' ); 
-INSERT INTO card_type( id, description ) VALUES ( 2, 'Debit' ); 
+INSERT INTO card_types( id, description ) VALUES ( 1, 'Credit' ); 
+INSERT INTO card_types( id, description ) VALUES ( 2, 'Debit' ); 
 INSERT INTO membership_type( id, description ) VALUES ( 1, 'ML' ); 
 INSERT INTO membership_type( id, description ) VALUES ( 2, 'VL' ); 
 INSERT INTO membership_type( id, description ) VALUES ( 3, 'TV' ); 

@@ -1,6 +1,5 @@
 package db;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import db.entities.MembershipDAO;
 import db.entities.RentStatusDAO;
 import db.entities.RentalDAO;
 import db.entities.UserDAO;
+import entities.Card;
 import entities.Rental;
 import entities.User;
 import java.util.Map;
@@ -131,6 +131,9 @@ public class Database implements IDatabase {
 		User userObj = null;
                 if (result.size() == 1 && (int) result.get(0).get("c") > 0) {
                     userObj = this.user.get(user);
+                    
+                    System.out.println("TEST");
+                    this.cards.insertCard(new Card(1, Card.Type.Debit, 1));
                 }
 		return userObj;
 	}

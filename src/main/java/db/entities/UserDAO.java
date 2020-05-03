@@ -13,9 +13,9 @@ import java.util.Map;
 
 public class UserDAO extends DAO implements IUserDAO {
     
-        	private CardsDAO cards;
-	private LoyaltyDAO loyalty;
-	private MembershipDAO membership;
+        	private final CardsDAO cards;
+	private final LoyaltyDAO loyalty;
+	private final MembershipDAO membership;
 
 	public UserDAO(SQLDatabase db) {
             super(db);
