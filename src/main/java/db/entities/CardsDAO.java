@@ -23,8 +23,12 @@ public class CardsDAO extends DAO implements ICardsDAO {
                 "(user_id', 'type_id') " +
                 "VALUES (#1, #2);";
                 
-                sql = sql.replace("#1", card.getType().toString());
-                sql = sql.replace("#2", String.valueOf(card.getUser()));
+                String type = (String) this.db.query("SELECT id FROM card_types WHERE description='"
+                        + "'" + String.valueOf(card.getType()) + "';").get(0).get("id");
+                        
+                
+                sql = sql.replace("#2", type);
+                sql = sql.replace("#1", String.valueOf(card.getUser()));
                 
                 System.out.print(this.db.query(sql).toString());
                 
