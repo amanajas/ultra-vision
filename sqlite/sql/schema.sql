@@ -1,4 +1,4 @@
-CREATE TABLE card_type ( 
+CREATE TABLE card_types ( 
 	id                   integer NOT NULL  PRIMARY KEY  ,
 	description          text NOT NULL    
  );
@@ -46,7 +46,8 @@ CREATE TABLE cards (
 	id                   integer NOT NULL  PRIMARY KEY  ,
 	user_id              integer NOT NULL    ,
 	type_id              integer NOT NULL    ,
-	FOREIGN KEY ( user_id ) REFERENCES users( id )  
+	FOREIGN KEY ( user_id ) REFERENCES users( id ),
+	FOREIGN KEY ( type_id ) REFERENCES card_types( id ) 
  );
 
 CREATE TABLE loyalty ( 

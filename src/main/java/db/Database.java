@@ -16,13 +16,13 @@ import java.util.Map;
 
 public class Database implements IDatabase {
 	
-	private SQLDatabase db;
-	private CardsDAO cards;
-	private LoyaltyDAO loyalty;
-	private RentalDAO rental;
-	private RentStatusDAO rentStatus;
-	private UserDAO user;
-	private MembershipDAO membership;
+	private final SQLDatabase db;
+	private final CardsDAO cards;
+	private final LoyaltyDAO loyalty;
+	private final RentalDAO rental;
+	private final RentStatusDAO rentStatus;
+	private final UserDAO user;
+	private final MembershipDAO membership;
 	
 	public Database(SQLDatabase db) {
 		this.db = db;
@@ -121,21 +121,16 @@ public class Database implements IDatabase {
 
 	public User executeLogin(String user, String password) throws SQLException {
                 
-                List<Map<String, Object>> result = this.db.query("SELECT u.id AS id, u.name AS name, "
-                        + "u.member_id AS mid "
+                List<Map<String, Object>> result = this.db.query("SELECT count(*) "
+                        + "AS c "
                         + "FROM users AS u "
 			+ "JOIN access AS a ON a.user_id = u.id "
-			+ "WHERE a.password='" + password + "' AND "
-			+ "u.name = '" + user + "'");
+			+ "WHERE a.password = '" + password + "' AND "
+			+ "u.name = '" + user + "';");
 		
 		User userObj = null;
-                for(Map<String, Object> map : result){
-                    userObj = new User(
-                                (int) map.get("id"),
-                                (String) map.get("name"),
-                                this.loyalty.get((int) map.get("id")),
-                                this.membership.get((int) map.get("mid")),
-                                this.cards.get((int) map.get("id")));	
+                if (result.size() == 1 && (int) result.get(0).get("c") > 0) {
+                    userObj = this.user.get(user);
                 }
 		return userObj;
 	}

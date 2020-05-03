@@ -1,6 +1,5 @@
 package db.entities;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.SQLDatabase;

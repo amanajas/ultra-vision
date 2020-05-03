@@ -7,7 +7,6 @@ package controllers;
 
 import gui.Window;
 import java.util.HashMap;
-import javax.swing.JFrame;
 
 /**
  *
@@ -15,7 +14,7 @@ import javax.swing.JFrame;
  */
 public class WindowController {
     
-    private final HashMap<String, JFrame> windows;
+    private final HashMap<String, Window> windows;
     
     private WindowController() {
         this.windows = new HashMap<>();
@@ -33,10 +32,6 @@ public class WindowController {
     public void addWindow(Window window) {
         this.windows.put(window.getName(), window);
         this.showWindow(window.getName(), true);
-    }
-    
-    public void removeWindow(String key) {
-        this.windows.remove(key);
     }
     
     public void showWindow(String key, boolean flag) {

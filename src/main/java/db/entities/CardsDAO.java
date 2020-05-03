@@ -7,7 +7,6 @@ import db.SQLDatabase;
 import db.dao.DAO;
 import db.dao.ICardsDAO;
 import entities.Card;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Map;
 

@@ -5,6 +5,7 @@
  */
 package gui;
 
+import controllers.WindowController;
 import db.Database;
 import entities.User;
 
@@ -47,9 +48,16 @@ public class MainWindow extends Window {
         updateRentalMenuItem = new javax.swing.JMenuItem();
         addRentalMenuItem = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Ultra-Vision");
+        setAlwaysOnTop(true);
         setPreferredSize(new java.awt.Dimension(700, 500));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         desktopPane.setLayout(null);
 
@@ -132,6 +140,11 @@ public class MainWindow extends Window {
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        WindowController.getInstance().showWindow(this.getName(), false);
+        WindowController.getInstance().showWindow(LoginWindow.NAME, true);
+    }//GEN-LAST:event_formWindowClosed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
