@@ -7,8 +7,7 @@ import entities.Card;
 
 public interface ICardsDAO {
 	
-	boolean insertCard(Card card) throws SQLException;
-	boolean updateCard(Card card) throws SQLException;
-	boolean deleteCard(Card card) throws SQLException;
+	int insertCard(Card card) throws SQLException;
+	void deleteCard(Card card) throws SQLException;
 	List<Card> get(int user) throws SQLException;
 }

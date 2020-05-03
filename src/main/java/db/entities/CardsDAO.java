@@ -18,33 +18,20 @@ public class CardsDAO extends DAO implements ICardsDAO {
 	}
 
 	@Override
-	public boolean insertCard(Card card) throws SQLException {
-		String sql = "﻿INSERT INTO cards " +
-                "(user_id', 'type_id') " +
-                "VALUES (#1, #2);";
+	public int insertCard(Card card) throws SQLException {
+		int type_id = (int) this.db.query("SELECT id FROM card_types WHERE description='"
+                        + String.valueOf(card.getType()) + "';").get(0).get("id");
                 
-                String type = (String) this.db.query("SELECT id FROM card_types WHERE description='"
-                        + "'" + String.valueOf(card.getType()) + "';").get(0).get("id");
-                        
-                
-                sql = sql.replace("#2", type);
-                sql = sql.replace("#1", String.valueOf(card.getUser()));
-                
-                System.out.print(this.db.query(sql).toString());
-                
-		return false;
+                String sql = "INSERT INTO cards(id, user_id, type_id) VALUES(null, #1, #2);";
+                this.db.insertOrUpdate(sql, card.getUser(), type_id);
+                return 0;
 	}
 
 	@Override
-	public boolean updateCard(Card card) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean deleteCard(Card card) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public void deleteCard(Card card) throws SQLException {
+		String sql = "DELETE FROM cards " +
+                "WHERE id= " + card.getId() + ";";
+                this.db.query(sql);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,25 +97,44 @@ public class SQLDatabase {
         }
         return false;
 	}
+        
+        public List<Map<String, Object>> insertOrUpdate(String sql, Object... values) {
+            return this.query(sql, true, values);
+        }
 	
+        public List<Map<String, Object>> query(String sql) {
+            return this.query(sql, false);
+        }
 	
-	public List<Map<String, Object>> query(String sql) {
+	private List<Map<String, Object>> query(String sql, 
+                boolean insertOrUpdate, Object... values) {
+            int valueCount = 1;
+            for (Object value : values) {
+                sql = sql.replace("#" + valueCount, String.valueOf(value));
+                valueCount++;
+            }
             Connection conn = null;
             List<Map<String, Object>> records = new ArrayList<>();
             try {
                 conn = DriverManager.getConnection(this.path);
                 if (conn != null) {
-                    Statement stmt = conn.createStatement();
-                    System.out.println(sql);
-                    ResultSet response = stmt.executeQuery(sql);
-                    while(response.next()){
-                        int cols = response.getMetaData().getColumnCount();
+                    System.out.println(sql.trim());
+                    PreparedStatement stmt = conn.prepareStatement(sql.trim());
+                    if (insertOrUpdate) {
                         Map<String, Object> map = new HashMap<>();
-                        for(int i = 0; i < cols; i++){
-                          map.put(response.getMetaData().getColumnName(i + 1), 
-                                  response.getObject(i + 1));
-                        }
+                        map.put("result", stmt.execute());
                         records.add(map);
+                    } else {
+                        ResultSet response = stmt.executeQuery();
+                        while(response.next()){
+                            int cols = response.getMetaData().getColumnCount();
+                            Map<String, Object> map = new HashMap<>();
+                            for(int i = 0; i < cols; i++){
+                              map.put(response.getMetaData().getColumnName(i + 1), 
+                                      response.getObject(i + 1));
+                            }
+                            records.add(map);
+                        }
                     }
                 }
 
