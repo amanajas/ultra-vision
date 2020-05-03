@@ -8,9 +8,9 @@ public class Card {
 	
 	private int id;
 	private Type type;
-	private User user;
+	private int user;
 	
-	public Card(int id, Type type, User user) {
+	public Card(int id, Type type, int user) {
 		this.id = id;
 		this.type = type;
 		this.user = user;
@@ -24,7 +24,7 @@ public class Card {
 		return type;
 	}
 	
-	public User getUser() {
+	public int getUser() {
 		return user;
 	}
 }

@@ -18,7 +18,7 @@ public class UserDAO extends DAO implements IUserDAO {
 	@Override
 	public boolean insertUser(User user) throws SQLException {
 		// TODO Auto-generated method stub
-		return this.db.query("").rowInserted();
+                return false;
 	}
 
 	@Override

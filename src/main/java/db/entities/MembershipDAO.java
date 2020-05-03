@@ -7,6 +7,8 @@ import db.SQLDatabase;
 import db.dao.DAO;
 import db.dao.IMembership;
 import entities.Membership;
+import java.util.List;
+import java.util.Map;
 import memberships.Boxset;
 import memberships.Movie;
 import memberships.MusicLovers;
@@ -26,26 +28,35 @@ public class MembershipDAO extends DAO implements IMembership {
 	}
 
 	@Override
-	public Membership get(int user) throws SQLException {
-		ResultSet result = this.db.query("SELECT id, "
-				+ "description, "
-				+ "type.description FROM memberships AS m"
-				+ "JOIN membership_type AS type ON type.id = m.type_id"
-				+ "WHERE m.user_id = " + user);
+	public Membership get(int membership_id) throws SQLException {
+                List<Map<String, Object>> result = this.db.query("SELECT m.id AS id, "
+                      + "m.description AS description, "
+                      + "t.description AS type "
+                      + "FROM memberships AS m "
+                      + "JOIN membership_type AS t ON t.id = m.type_id "
+                      + "WHERE m.id = " + membership_id + ";");
 		
-		Membership.Type type = Membership.Type.valueOf(result.getString(2));
-		Membership member = null;
-		int id = result.getInt(0);
-		String description = result.getString(1);
-		if (type.equals(Membership.Type.PR)) {
-			member = new Premium(id, description);
-		} else if (type.equals(Membership.Type.VL)) {
-			member = new Movie(id, description);
-		} else if (type.equals(Membership.Type.TV)) {
-			member = new Boxset(id, description);
-		} else {
-			member = new MusicLovers(id, description);
-		}
+                Membership member = null;
+                for(Map<String, Object> map : result){
+                    Membership.Type type = Membership.Type.valueOf(
+                            (String) map.get("type"));
+                    int id = (int) map.get("id");
+                    String description = (String) map.get("description");
+                    switch (type) {
+                        case PR:
+                            member = new Premium(id, description);
+                            break;
+                        case VL:
+                            member = new Movie(id, description);
+                            break;
+                        case TV:
+                            member = new Boxset(id, description);
+                            break;
+                        default:
+                            member = new MusicLovers(id, description);
+                            break;
+                    }
+                }
 		return member;
 	}
 

@@ -12,6 +12,7 @@ import db.entities.RentalDAO;
 import db.entities.UserDAO;
 import entities.Rental;
 import entities.User;
+import java.util.Map;
 
 public class Database implements IDatabase {
 	
@@ -119,22 +120,23 @@ public class Database implements IDatabase {
 	}
 
 	public User executeLogin(String user, String password) throws SQLException {
-		ResultSet result = this.db.query("SELECT count(*), u.id, u.name FROM users AS u"
-				+ "JOIN access AS a ON a.user_id = u.id"
-				+ "WHERE a.password='" + password + "' AND "
-						+ "u.name = '" + user + "'");
+                
+                List<Map<String, Object>> result = this.db.query("SELECT u.id AS id, u.name AS name, "
+                        + "u.member_id AS mid "
+                        + "FROM users AS u "
+			+ "JOIN access AS a ON a.user_id = u.id "
+			+ "WHERE a.password='" + password + "' AND "
+			+ "u.name = '" + user + "'");
 		
 		User userObj = null;
-		if (result.getInt(0) > 0) {
-			int userId = result.getInt(1);
-			userObj = new User(
-					userId,
-					result.getString(2),
-					this.loyalty.get(userId),
-					this.membership.get(userId),
-					this.cards.get(userId));
-		}
-		
+                for(Map<String, Object> map : result){
+                    userObj = new User(
+                                (int) map.get("id"),
+                                (String) map.get("name"),
+                                this.loyalty.get((int) map.get("id")),
+                                this.membership.get((int) map.get("mid")),
+                                this.cards.get((int) map.get("id")));	
+                }
 		return userObj;
 	}
 

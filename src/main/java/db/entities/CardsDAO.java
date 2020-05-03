@@ -7,7 +7,9 @@ import db.SQLDatabase;
 import db.dao.DAO;
 import db.dao.ICardsDAO;
 import entities.Card;
-import entities.User;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class CardsDAO extends DAO implements ICardsDAO {
 
@@ -17,27 +19,38 @@ public class CardsDAO extends DAO implements ICardsDAO {
 	}
 
 	@Override
-	public boolean insertCard(User user) throws SQLException {
+	public boolean insertCard(Card card) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean updateCard(User user) throws SQLException {
+	public boolean updateCard(Card card) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean deleteCard(User user) throws SQLException {
+	public boolean deleteCard(Card card) throws SQLException {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public List<Card> get(int user) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+                List<Card> cards = new ArrayList<>();
+                List<Map<String, Object>> result = this.db.query("SELECT c.id AS cardId, "
+                        + "t.description AS description "
+                        + "FROM cards AS c "
+                        + "JOIN card_types AS t ON t.id = c.type_id "
+                        + "WHERE c.user_id = " + user + ";");
+                for(Map<String, Object> map : result){
+                    int id = (int) map.get("cardId");
+                    Card.Type cardType = Card.Type.valueOf((String) map.get(
+                            "description"));
+                    cards.add(new Card(id, cardType, user));
+                }
+		return cards;
 	}
 
 }

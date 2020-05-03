@@ -11,6 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 public class SQLDatabase {
 	
 	private String path;
@@ -29,18 +33,15 @@ public class SQLDatabase {
 		try {
 		    reader = new BufferedReader(new FileReader(file));
 		    String text = null;
-
 		    while ((text = reader.readLine()) != null) {
 		        schema += text;
-		        if (schema.indexOf(";") > -1) {
-		        	this.createTable(conn, schema);
-		        	schema = "";
+		        if (schema.contains(";")) {
+                            this.createTable(conn, schema);
+                            schema = "";
 		        }
 		    }
 		} catch (FileNotFoundException e) {
-		    e.printStackTrace();
 		} catch (IOException e) {
-		    e.printStackTrace();
 		} finally {
 		    try {
 		        if (reader != null) {
@@ -70,7 +71,6 @@ public class SQLDatabase {
 		}
 		Connection conn = null;
         try {
-        	Class.forName("org.sqlite.JDBC");
         	conn = DriverManager.getConnection(this.path);
             if (conn != null) {
             	
@@ -83,7 +83,7 @@ public class SQLDatabase {
                 return true;
             }
 
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
             try {
@@ -98,33 +98,38 @@ public class SQLDatabase {
 	}
 	
 	
-	public ResultSet query(String sql) {
-		ResultSet response = null;
-		Connection conn = null;
-        try {
-        	Class.forName("org.sqlite.JDBC");
-        	conn = DriverManager.getConnection(this.path);
-            if (conn != null) {
-            	
-            	Statement stmt = conn.createStatement(
-            			ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_UPDATABLE);
-            	System.out.println(sql);
-            	response = stmt.executeQuery(sql);
-            }
-
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        } finally {
+	public List<Map<String, Object>> query(String sql) {
+            Connection conn = null;
+            List<Map<String, Object>> records = new ArrayList<>();
             try {
+                conn = DriverManager.getConnection(this.path);
                 if (conn != null) {
-                    conn.close();
+                    Statement stmt = conn.createStatement();
+                    System.out.println(sql);
+                    ResultSet response = stmt.executeQuery(sql);
+                    while(response.next()){
+                        int cols = response.getMetaData().getColumnCount();
+                        Map<String, Object> map = new HashMap<>();
+                        for(int i = 0; i < cols; i++){
+                          map.put(response.getMetaData().getColumnName(i + 1), 
+                                  response.getObject(i + 1));
+                        }
+                        records.add(map);
+                    }
                 }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                try {
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } catch (SQLException ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
-        }
-        return response;
+            return records;
 	}
 	
 }

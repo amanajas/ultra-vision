@@ -4,12 +4,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 import entities.Card;
-import entities.User;
 
 public interface ICardsDAO {
 	
-	boolean insertCard(User user) throws SQLException;
-	boolean updateCard(User user) throws SQLException;
-	boolean deleteCard(User user) throws SQLException;
+	boolean insertCard(Card card) throws SQLException;
+	boolean updateCard(Card card) throws SQLException;
+	boolean deleteCard(Card card) throws SQLException;
 	List<Card> get(int user) throws SQLException;
 }

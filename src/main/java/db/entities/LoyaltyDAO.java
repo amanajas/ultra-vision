@@ -8,6 +8,8 @@ import db.dao.DAO;
 import db.dao.ILoyaltyDAO;
 import entities.LoyaltyPoints;
 import entities.User;
+import java.util.List;
+import java.util.Map;
 
 public class LoyaltyDAO extends DAO implements ILoyaltyDAO {
 
@@ -24,14 +26,18 @@ public class LoyaltyDAO extends DAO implements ILoyaltyDAO {
 
 	@Override
 	public LoyaltyPoints get(int user) throws SQLException {
-		ResultSet result = this.db.query("SELECT id, "
-				+ "points"
-				+ "WHERE m.user_id = " + user);
+		List<Map<String, Object>> result = this.db.query("SELECT id, "
+				+ "points FROM loyalty "
+				+ "WHERE user_id = " + user + ";");
 		
-		return new LoyaltyPoints(
-				result.getInt(0), 
-				result.getInt(1)
+                LoyaltyPoints loyalty = null;
+                for(Map<String, Object> map : result){
+                    loyalty = new LoyaltyPoints(
+				(int) map.get("id"), 
+				(int) map.get("points")
 				);
+                }
+                return loyalty;
 	}
 
 }
