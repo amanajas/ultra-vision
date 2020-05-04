@@ -14,6 +14,7 @@ public class User {
 	
 	private int id;
 	private String name;
+        private String password;
 	private Membership membership;
 	private List<Card> cards;
 	private LoyaltyPoints points;
@@ -25,6 +26,14 @@ public class User {
 		this.points = loyalty;
 		this.membership = membership;
 	}
+        
+        public void setPassword(String password) {
+            this.password = password;
+        }
+        
+        public String getPassword() {
+            return password;
+        }
 	
 	public String getName() {
 		return name;

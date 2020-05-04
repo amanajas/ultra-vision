@@ -8,7 +8,7 @@ import entities.User;
 
 public interface IRentStatusDAO {
 	
-	boolean insertRentStatus(User user, Rental rental) throws SQLException;
+	int insertRentStatus(User user, Rental rental) throws SQLException;
 	boolean updateRentStatus(User user,Rental rental) throws SQLException;
 	ResultSet get(User user) throws SQLException;
 }

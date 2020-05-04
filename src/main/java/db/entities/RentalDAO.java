@@ -16,9 +16,9 @@ public class RentalDAO extends DAO implements IRentalDAO {
 	}
 
 	@Override
-	public boolean insertRental(Rental rental) throws SQLException {
+	public int insertRental(Rental rental) throws SQLException {
 		// TODO Auto-generated method stub
-		return false;
+		return -1;
 	}
 
 	@Override

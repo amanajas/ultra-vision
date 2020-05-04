@@ -19,8 +19,8 @@ public class LoyaltyDAO extends DAO implements ILoyaltyDAO {
 
 	@Override
 	public boolean updateLoyalty(User user) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+            String sql = "UPDATE loyalty SET points=#1 WHERE user_id=#2;";
+            return this.db.update(sql, user.getLoyalty().getPoints(), user.getId());
 	}
 
 	@Override
@@ -38,5 +38,13 @@ public class LoyaltyDAO extends DAO implements ILoyaltyDAO {
                 }
                 return loyalty;
 	}
+
+    @Override
+    public int insertLoyalty(User user) throws SQLException {
+        String sql = "INSERT INTO loyalty (id, points, user_id) VALUES (null, #1, #2);";
+        int id = this.db.insert(sql, user.getLoyalty().getPoints(), user.getId());
+        user.getLoyalty().setId(id);
+        return id;
+    }
 
 }

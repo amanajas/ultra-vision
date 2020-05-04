@@ -5,12 +5,12 @@ public class LoyaltyPoints {
 	private int id;
 	private Integer points;
 	
-	public LoyaltyPoints(int id) {
-		this(id, 0);
+	public LoyaltyPoints() {
+		this(-1, 0);
 	}
 	
 	public LoyaltyPoints(int id, int amount) {
-		this.id = id;
+		this.id = -1;
 		this.points = amount;
 	}
 	
@@ -29,5 +29,9 @@ public class LoyaltyPoints {
 	public int getPoints() {
 		return this.points;
 	}
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
 }

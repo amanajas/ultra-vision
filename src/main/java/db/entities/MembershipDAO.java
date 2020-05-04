@@ -21,12 +21,6 @@ public class MembershipDAO extends DAO implements IMembership {
 	}
 
 	@Override
-	public boolean updateMembership(int user, Membership membership) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public Membership get(int membership_id) throws SQLException {
                 List<Map<String, Object>> result = this.db.query("SELECT m.id AS id, "
                       + "m.description AS description, "
