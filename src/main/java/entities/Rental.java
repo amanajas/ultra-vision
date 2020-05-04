@@ -12,6 +12,10 @@ public class Rental {
 	private String title;
 	private Category category;
 	private Date created;
+        
+        public Rental(String title, Category category) {
+            this(-1, title, category);
+        }
 	
 	public Rental(int id, String title, Category category) {
 		this.id = id;

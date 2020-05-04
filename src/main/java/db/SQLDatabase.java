@@ -17,22 +17,23 @@ import java.util.List;
 import java.util.Map;
 public class SQLDatabase {
 	
-	private String path;
-	private String dir;
-	
-	public SQLDatabase(String path) {
-		this.dir = "sqlite/" + path;
-		this.path = "jdbc:sqlite:" + this.dir;
+	private final String path;
+	private final String dir;
+	private final String schema;
+        
+	public SQLDatabase(String fileName) {
+		this.dir = "sqlite/db/";
+		this.path = this.dir + fileName;
+                this.schema = "sqlite/sql/schema.sql";
 	}
 	
 	private void openSQLSchema(SQLiteConnection conn) {
-		String file = "sqlite/sql/schema.sql";
 		String schema = "";
 		BufferedReader reader = null;
 
 		try {
-		    reader = new BufferedReader(new FileReader(file));
-		    String text = null;
+		    reader = new BufferedReader(new FileReader(this.schema));
+		    String text;
 		    while ((text = reader.readLine()) != null) {
 		        schema += text;
 		        if (schema.contains(";")) {
@@ -64,7 +65,7 @@ public class SQLDatabase {
 	}
 	
 	public Boolean create() {
-            File f = new File(this.dir);
+            File f = new File(this.path);
             if (f.exists()) {
                     System.out.println("Database already exists!");
                     return true;		
@@ -95,14 +96,18 @@ public class SQLDatabase {
 	}
         
         public int insert(String sql, Object... values) {
-            return (int) this.query(sql, values).get(0).get("id");
+            return (int) this.query(sql, true, values).get(0).get("last_insert_rowid()");
         }
         
         public boolean update(String sql, Object... values) {
-            return (boolean) this.query(sql, values).get(0).get("id");
+            return (boolean) this.query(sql, true, values).get(0).get("last_insert_rowid()");
         }
 	
         public List<Map<String, Object>> query(String sql, Object... values) {
+            return this.query(sql, false, values);
+        }
+        
+        private List<Map<String, Object>> query(String sql, boolean insertUpdate, Object... values) {
             int valueCount = 1;
             for (Object value : values) {
                 sql = sql.replace("#" + valueCount, String.valueOf(value));
@@ -111,10 +116,17 @@ public class SQLDatabase {
             SQLiteConnection conn = null;
             List<Map<String, Object>> records = new ArrayList<>();
             try {
+                ResultSet response;
                 conn = new SQLiteConnection(this.dir, this.path);
                 System.out.println(sql.trim());
-                PreparedStatement stmt = conn.prepareStatement(sql.trim());
-                ResultSet response = stmt.executeQuery();
+                PreparedStatement stmt = conn.prepareStatement(sql.trim(),
+                        Statement.RETURN_GENERATED_KEYS);
+                if (insertUpdate) {
+                    stmt.executeUpdate();
+                    response = stmt.getGeneratedKeys();
+                } else {
+                    response = stmt.executeQuery();
+                }
                 while(response.next()){
                     int cols = response.getMetaData().getColumnCount();
                     Map<String, Object> map = new HashMap<>();

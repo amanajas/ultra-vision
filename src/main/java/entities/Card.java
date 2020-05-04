@@ -1,8 +1,8 @@
 package entities;
 
 public class Card {
-	
-	public enum Type {
+
+    	public enum Type {
 		Credit, Debit
 	}
 	
@@ -10,6 +10,10 @@ public class Card {
 	private Type type;
 	private int user;
 	
+        public Card(Type type, int user) {
+            this(-1, type, user);
+        }
+        
 	public Card(int id, Type type, int user) {
 		this.id = id;
 		this.type = type;
@@ -27,4 +31,8 @@ public class Card {
 	public int getUser() {
 		return user;
 	}
+        
+        public void setId(int id) {
+            this.id = id;
+        }
 }

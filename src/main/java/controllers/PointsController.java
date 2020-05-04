@@ -11,4 +11,15 @@ package controllers;
  */
 public class PointsController {
     
+    private PointsController() {
+    }
+    
+    public static PointsController getInstance() {
+        return PointsControllerHolder.INSTANCE;
+    }
+    
+    private static class PointsControllerHolder {
+
+        private static final PointsController INSTANCE = new PointsController();
+    }
 }
