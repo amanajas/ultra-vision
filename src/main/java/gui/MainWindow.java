@@ -33,23 +33,32 @@ public class MainWindow extends Window {
     private void initComponents() {
 
         desktopPane = new javax.swing.JDesktopPane();
+        addNewRentButton = new javax.swing.JButton();
+        rentStatusTableScroll = new javax.swing.JScrollPane();
+        rentStatusTable = new javax.swing.JTable();
+        updateSelectedRentButton = new javax.swing.JButton();
+        searchRentStatusField = new javax.swing.JTextField();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         exportDataMenuItem = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         customerMenu = new javax.swing.JMenu();
         searchCustomerMenuItem = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         addCustomerMenuItem = new javax.swing.JMenuItem();
         updateCustomerMenuItem = new javax.swing.JMenuItem();
         deleteCustomerMenuItem = new javax.swing.JMenuItem();
         rentalMenu = new javax.swing.JMenu();
         searchRentalMenuItem = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         updateRentalMenuItem = new javax.swing.JMenuItem();
         addRentalMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ultra-Vision");
         setAlwaysOnTop(true);
+        setName("frameWindow"); // NOI18N
         setPreferredSize(new java.awt.Dimension(700, 500));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -58,7 +67,84 @@ public class MainWindow extends Window {
             }
         });
 
-        desktopPane.setLayout(null);
+        addNewRentButton.setText("Add new rent");
+        addNewRentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addNewRentButtonActionPerformed(evt);
+            }
+        });
+
+        rentStatusTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Created", "Title", "Customer", "Updated"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, true, true, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        rentStatusTable.setColumnSelectionAllowed(true);
+        rentStatusTable.getTableHeader().setReorderingAllowed(false);
+        rentStatusTableScroll.setViewportView(rentStatusTable);
+        rentStatusTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        updateSelectedRentButton.setText("Update selected rent");
+        updateSelectedRentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateSelectedRentButtonActionPerformed(evt);
+            }
+        });
+
+        searchRentStatusField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        searchRentStatusField.setToolTipText("Search rent status by Title or Customer name");
+
+        desktopPane.setLayer(addNewRentButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktopPane.setLayer(rentStatusTableScroll, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktopPane.setLayer(updateSelectedRentButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktopPane.setLayer(searchRentStatusField, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
+        desktopPane.setLayout(desktopPaneLayout);
+        desktopPaneLayout.setHorizontalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, desktopPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(searchRentStatusField)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(updateSelectedRentButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addNewRentButton)
+                .addGap(65, 65, 65))
+            .addComponent(rentStatusTableScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
+        );
+        desktopPaneLayout.setVerticalGroup(
+            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(desktopPaneLayout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addGroup(desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addNewRentButton)
+                    .addComponent(updateSelectedRentButton)
+                    .addComponent(searchRentStatusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rentStatusTableScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE))
+        );
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -66,6 +152,7 @@ public class MainWindow extends Window {
         exportDataMenuItem.setMnemonic('a');
         exportDataMenuItem.setText("Export data ...");
         fileMenu.add(exportDataMenuItem);
+        fileMenu.add(jSeparator3);
 
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
@@ -81,18 +168,22 @@ public class MainWindow extends Window {
         customerMenu.setMnemonic('e');
         customerMenu.setText("Customer");
 
-        searchCustomerMenuItem.setMnemonic('t');
+        searchCustomerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.ALT_MASK));
         searchCustomerMenuItem.setText("Search");
         customerMenu.add(searchCustomerMenuItem);
+        customerMenu.add(jSeparator1);
 
+        addCustomerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.ALT_MASK));
         addCustomerMenuItem.setMnemonic('y');
         addCustomerMenuItem.setText("Add");
         customerMenu.add(addCustomerMenuItem);
 
+        updateCustomerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.ALT_MASK));
         updateCustomerMenuItem.setMnemonic('p');
         updateCustomerMenuItem.setText("Update");
         customerMenu.add(updateCustomerMenuItem);
 
+        deleteCustomerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.ALT_MASK));
         deleteCustomerMenuItem.setMnemonic('d');
         deleteCustomerMenuItem.setText("Delete");
         customerMenu.add(deleteCustomerMenuItem);
@@ -102,14 +193,18 @@ public class MainWindow extends Window {
         rentalMenu.setMnemonic('h');
         rentalMenu.setText("Rental");
 
+        searchRentalMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.ALT_MASK));
         searchRentalMenuItem.setMnemonic('c');
         searchRentalMenuItem.setText("Search");
         rentalMenu.add(searchRentalMenuItem);
+        rentalMenu.add(jSeparator2);
 
+        updateRentalMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK));
         updateRentalMenuItem.setMnemonic('a');
         updateRentalMenuItem.setText("Update");
         rentalMenu.add(updateRentalMenuItem);
 
+        addRentalMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.ALT_MASK));
         addRentalMenuItem.setText("Add");
         rentalMenu.add(addRentalMenuItem);
 
@@ -122,13 +217,13 @@ public class MainWindow extends Window {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -144,9 +239,18 @@ public class MainWindow extends Window {
         WindowController.getInstance().showLogin();
     }//GEN-LAST:event_formWindowClosed
 
+    private void addNewRentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewRentButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addNewRentButtonActionPerformed
+
+    private void updateSelectedRentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSelectedRentButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_updateSelectedRentButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addCustomerMenuItem;
+    private javax.swing.JButton addNewRentButton;
     private javax.swing.JMenuItem addRentalMenuItem;
     private javax.swing.JMenu customerMenu;
     private javax.swing.JMenuItem deleteCustomerMenuItem;
@@ -154,12 +258,19 @@ public class MainWindow extends Window {
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenuItem exportDataMenuItem;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JTable rentStatusTable;
+    private javax.swing.JScrollPane rentStatusTableScroll;
     private javax.swing.JMenu rentalMenu;
     private javax.swing.JMenuItem searchCustomerMenuItem;
+    private javax.swing.JTextField searchRentStatusField;
     private javax.swing.JMenuItem searchRentalMenuItem;
     private javax.swing.JMenuItem updateCustomerMenuItem;
     private javax.swing.JMenuItem updateRentalMenuItem;
+    private javax.swing.JButton updateSelectedRentButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
