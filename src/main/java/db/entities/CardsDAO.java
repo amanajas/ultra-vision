@@ -22,8 +22,8 @@ public class CardsDAO extends DAO implements ICardsDAO {
             int type_id = (int) this.db.query("SELECT id FROM card_types WHERE description='"
                     + String.valueOf(card.getType()) + "';").get(0).get("id");
 
-            String sql = "INSERT INTO cards(id, user_id, type_id) VALUES(null, #1, #2);";
-            int id = this.db.insert(sql, card.getUser(), type_id);
+            String sql = "INSERT INTO cards(id, user_id, type_id, number, expiration) VALUES(null, #1, #2, '#3', #4);";
+            int id = this.db.insert(sql, card.getUser(), type_id, card.getNumber(), card.getExpirationDate());
             card.setId(id);
             return id;
 	}

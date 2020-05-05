@@ -46,6 +46,8 @@ CREATE TABLE IF NOT EXISTS  cards (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	user_id              integer NOT NULL    ,
 	type_id              integer NOT NULL    ,
+        number               text NOT NULL       ,
+        expiration              datetime NOT NULL    ,
 	FOREIGN KEY ( user_id ) REFERENCES users( id ),
 	FOREIGN KEY ( type_id ) REFERENCES card_types( id ) 
  );

@@ -11,5 +11,5 @@ public interface IUserDAO {
 	boolean deleteUser(User user) throws SQLException;
 	boolean updateUser(User user) throws SQLException;
 	List<User> getAll() throws SQLException;
-	User get(String name) throws SQLException;
+	List<User> get(String name) throws SQLException;
 }

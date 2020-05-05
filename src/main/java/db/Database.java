@@ -9,9 +9,13 @@ import db.entities.MembershipDAO;
 import db.entities.RentStatusDAO;
 import db.entities.RentalDAO;
 import db.entities.UserDAO;
+import entities.Card;
 import entities.Rental;
 import entities.User;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Database implements IDatabase {
 	
@@ -41,6 +45,17 @@ public class Database implements IDatabase {
     public boolean create() {
         return this.db.create();
     }
+
+    @Override
+    public void addCardToUser(User user, Card card) {
+            try {
+                this.cards.insertCard(card);
+                user.getLoyalty().addPoints(Card.POINTS);
+                this.loyalty.updateLoyalty(user);
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
         
         private static class DatabaseHolder {
 
@@ -69,62 +84,112 @@ public class Database implements IDatabase {
 
 	@Override
 	public List<User> getCustomers() {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.user.getAll();
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
 	}
 
 	@Override
 	public List<User> searchCustomer(String name) {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.user.get(name);
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
 	}
 
 	@Override
 	public Boolean addCustomer(User custumer) {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.user.insertUser(custumer) > 0;
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
 	}
 
 	@Override
 	public Boolean editCustomer(User custumer) {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.user.updateUser(custumer);
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
 	}
 
 	@Override
 	public Boolean deleteCustomer(User custumer) {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.user.deleteUser(custumer);
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
 	}
 
 	@Override
 	public Boolean addTitle(Rental title) {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.rental.insertRental(title) > 0;
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
 	}
 
 	@Override
 	public List<Rental> searchRental(String title) {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.rental.get(title);
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
 	}
 
 	@Override
 	public Boolean editTitle(Rental title) {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.rental.updateRental(title);
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
 	}
 
 	@Override
 	public Boolean addCustomerRental(User customer, Rental title) {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.rentStatus.insertRentStatus(customer, title) > 0;
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
 	}
 
 	@Override
 	public Boolean addCustomerReturn(User customer, Rental title) {
-		// TODO Auto-generated method stub
-		return null;
+            try {
+                // TODO Auto-generated method stub
+                return this.rentStatus.updateRentStatus(customer, title);
+            } catch (SQLException ex) {
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return false;
 	}
 
 	public User executeLogin(String user, String password) throws SQLException {
@@ -136,11 +201,10 @@ public class Database implements IDatabase {
 			+ "WHERE a.password = '" + password + "' AND "
 			+ "u.name = '" + user + "';");
 		
-		User userObj = null;
                 if (result.size() == 1 && (int) result.get(0).get("c") > 0) {
-                    userObj = this.user.get(user);
+                    return this.user.get(user).get(0);
                 }
-		return userObj;
+		return null;
 	}
 
 }

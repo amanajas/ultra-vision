@@ -1,5 +1,6 @@
 package db;
 
+import entities.Card;
 import java.util.List;
 
 import entities.Rental;
@@ -18,4 +19,5 @@ public interface IDatabase {
 	public Boolean editTitle(Rental title);
 	public Boolean addCustomerRental(User customer, Rental title);
 	public Boolean addCustomerReturn(User customer, Rental title);
+        public void addCardToUser(User user, Card card);
 }

@@ -1,6 +1,5 @@
 package db.entities;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.SQLDatabase;
@@ -33,6 +32,9 @@ public class UserDAO extends DAO implements IUserDAO {
                     "INSERT INTO access(id, user_id, password) VALUES (null, #1, #2);",
                     id,
                     user.getPassword());
+            this.db.insert(
+                    "INSERT INTO loyalty(id, user_id, points) VALUES (null, #1, #2);",
+                    id, 0);
             return id;
 	}
 
@@ -85,22 +87,23 @@ public class UserDAO extends DAO implements IUserDAO {
 	}
 
 	@Override
-	public User get(String name) throws SQLException {
+	public List<User> get(String name) throws SQLException {
                 List<Map<String, Object>> result = this.db.query("SELECT u.id AS id, u.name AS name, "
                         + "u.member_id AS mid "
                         + "FROM users AS u "
-			+ "WHERE u.name = '" + name + "'");
+			+ "WHERE u.name LIKE '%" + name + "%'");
 		
-		User userObj = null;
+		List<User> list = new ArrayList<>();
                 for(Map<String, Object> map : result){
-                    userObj = new User(
+                    list.add(new User(
                                 (int) map.get("id"),
                                 (String) map.get("name"),
                                 this.loyalty.get((int) map.get("id")),
                                 this.membership.get((int) map.get("mid")),
-                                this.cards.get((int) map.get("id")));	
+                                this.cards.get((int) map.get("id")))
+                    );	
                 }
-		return userObj;
+		return list;
 	}
 
 }
