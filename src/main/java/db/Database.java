@@ -9,7 +9,6 @@ import db.entities.MembershipDAO;
 import db.entities.RentStatusDAO;
 import db.entities.RentalDAO;
 import db.entities.UserDAO;
-import entities.Card;
 import entities.Rental;
 import entities.User;
 import java.util.Map;
@@ -37,18 +36,18 @@ public class Database implements IDatabase {
         public static Database getInstance() {
             return Database.DatabaseHolder.INSTANCE;
         }
+
+    @Override
+    public boolean create() {
+        return this.db.create();
+    }
         
         private static class DatabaseHolder {
 
             private static final Database INSTANCE = new Database();
         }
         
-        @Override
-        public SQLDatabase get() {
-            return this.db;
-        }
-
-	public CardsDAO getCards() {
+        public CardsDAO getCards() {
 		return cards;
 	}
 

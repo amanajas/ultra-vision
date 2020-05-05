@@ -18,11 +18,19 @@ public class Rental {
         }
 	
 	public Rental(int id, String title, Category category) {
+		this(id, title, category, new Date());
+	}
+        
+        public Rental(int id, String title, Category category, Date date) {
 		this.id = id;
-		this.setTitle(title);
-		this.setCategory(category);
+		this.title = title;
+		this.category = category;
 		this.created = new Date();
 	}
+        
+        public void setId(int id) {
+            this.id = id;
+        }
 	
 	public int getId() {
 		return id;

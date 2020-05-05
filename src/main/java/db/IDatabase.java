@@ -7,7 +7,7 @@ import entities.User;
 
 public interface IDatabase {
 	
-	public SQLDatabase get();
+	public boolean create();
 	public List<User> getCustomers();
 	public List<User> searchCustomer(String name);
 	public Boolean addCustomer(User custumer);
