@@ -24,8 +24,8 @@ public class Database implements IDatabase {
 	private final UserDAO user;
 	private final MembershipDAO membership;
 	
-	public Database(SQLDatabase db) {
-		this.db = db;
+	public Database() {
+		this.db = new SQLDatabase();
 		this.cards = new CardsDAO(db);
 		this.loyalty = new LoyaltyDAO(db);
 		this.rental = new RentalDAO(db);
@@ -33,6 +33,20 @@ public class Database implements IDatabase {
 		this.user = new UserDAO(db);
 		this.membership = new MembershipDAO(db);
 	}
+        
+        public static Database getInstance() {
+            return Database.DatabaseHolder.INSTANCE;
+        }
+        
+        private static class DatabaseHolder {
+
+            private static final Database INSTANCE = new Database();
+        }
+        
+        @Override
+        public SQLDatabase get() {
+            return this.db;
+        }
 
 	public CardsDAO getCards() {
 		return cards;
@@ -114,11 +128,6 @@ public class Database implements IDatabase {
 		return null;
 	}
 
-	@Override
-	public SQLDatabase getDb() {
-		return this.db;
-	}
-
 	public User executeLogin(String user, String password) throws SQLException {
                 
                 List<Map<String, Object>> result = this.db.query("SELECT count(*) "
@@ -131,9 +140,6 @@ public class Database implements IDatabase {
 		User userObj = null;
                 if (result.size() == 1 && (int) result.get(0).get("c") > 0) {
                     userObj = this.user.get(user);
-                    
-                    System.out.println("TEST");
-                    this.cards.insertCard(new Card(1, Card.Type.Debit, 1));
                 }
 		return userObj;
 	}

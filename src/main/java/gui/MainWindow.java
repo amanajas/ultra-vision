@@ -6,7 +6,6 @@
 package gui;
 
 import controllers.WindowController;
-import db.Database;
 import entities.User;
 
 /**
@@ -18,8 +17,8 @@ public class MainWindow extends Window {
     public static final String NAME = "main";
     private User user;
 
-    MainWindow(Database db, User user) {
-        super(NAME, db);
+    public MainWindow(User user) {
+        super(NAME);
         initComponents();
         this.user = user;
     }
@@ -142,8 +141,7 @@ public class MainWindow extends Window {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        WindowController.getInstance().showWindow(this.getName(), false);
-        WindowController.getInstance().showWindow(LoginWindow.NAME, true);
+        WindowController.getInstance().showLogin();
     }//GEN-LAST:event_formWindowClosed
 
 
@@ -163,5 +161,10 @@ public class MainWindow extends Window {
     private javax.swing.JMenuItem updateCustomerMenuItem;
     private javax.swing.JMenuItem updateRentalMenuItem;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public Window copy() {
+        return new MainWindow(this.user);
+    }
 
 }

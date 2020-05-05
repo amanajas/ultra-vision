@@ -5,6 +5,9 @@
  */
 package controllers;
 
+import entities.User;
+import gui.LoginWindow;
+import gui.MainWindow;
 import gui.Window;
 import java.util.HashMap;
 
@@ -12,7 +15,7 @@ import java.util.HashMap;
  *
  * @author thiago.amanajas
  */
-public class WindowController {
+public class WindowController implements IWindowController {
     
     private final HashMap<String, Window> windows;
     
@@ -23,18 +26,37 @@ public class WindowController {
     public static WindowController getInstance() {
         return WindowControllerHolder.INSTANCE;
     }
+
+    @Override
+    public void showMainWindow() {
+        this.showWindow(MainWindow.NAME, true);
+    }
+
+    @Override
+    public void createMainWindow(User user) {
+        if (this.windows.get(MainWindow.NAME) == null) {
+            this.addWindow(new MainWindow(user));
+        }
+    }
+
+    @Override
+    public void showLogin() {
+        if (this.windows.get(LoginWindow.NAME) == null) {
+            this.addWindow(new LoginWindow());
+        }
+        this.showWindow(LoginWindow.NAME, true);
+    }
     
     private static class WindowControllerHolder {
-
         private static final WindowController INSTANCE = new WindowController();
     }
     
-    public void addWindow(Window window) {
+    private void addWindow(Window window) {
         this.windows.put(window.getName(), window);
         this.showWindow(window.getName(), true);
     }
     
-    public void showWindow(String key, boolean flag) {
+    private void showWindow(String key, boolean flag) {
         this.windows.entrySet().forEach((window) -> {
             if (window.getKey().equals(key)) {
                 window.getValue().setVisible(flag);

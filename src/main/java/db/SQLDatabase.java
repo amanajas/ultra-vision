@@ -21,9 +21,9 @@ public class SQLDatabase {
 	private final String dir;
 	private final String schema;
         
-	public SQLDatabase(String fileName) {
+	public SQLDatabase() {
 		this.dir = "sqlite/db/";
-		this.path = this.dir + fileName;
+		this.path = this.dir + "ultra-vision.db";
                 this.schema = "sqlite/sql/schema.sql";
 	}
 	

@@ -11,25 +11,20 @@ import db.Database;
  *
  * @author thiago.amanajas
  */
-public class Window extends javax.swing.JFrame {
-    private final Database db;
+public abstract class Window extends javax.swing.JFrame {
     private String name;
     /**
      * Creates new form NewApplication
      * @param db
      */
-    public Window(String name, Database db) {
+    public Window(String name) {
         this.name = name;
-        this.db = db;
     }
     
     public String getName() {
         return name;
     }
     
-    public Database getDb() {
-        return db;
-    }
-    
+    public abstract Window copy();
     
 }

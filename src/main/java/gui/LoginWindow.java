@@ -21,12 +21,9 @@ import javax.swing.JOptionPane;
 public class LoginWindow extends Window {
 
     public static final String NAME = "login";
-    /**
-     * Creates new form NewApplication
-     * @param db
-     */
-    public LoginWindow(Database db) {
-        super(NAME, db);
+
+    public LoginWindow() {
+        super(NAME);
         initComponents();
     }
 
@@ -122,7 +119,7 @@ public class LoginWindow extends Window {
         if (this.nameField.getText().length() != 0 && 
                 this.passwordField.getPassword().length != 0) {
             try {
-                User user = this.getDb().executeLogin(this.nameField.getText(),
+                User user = Database.getInstance().executeLogin(this.nameField.getText(),
                         String.valueOf(this.passwordField.getPassword()));
                 if (user == null) {
                     JOptionPane.showMessageDialog(this,
@@ -130,7 +127,8 @@ public class LoginWindow extends Window {
                             "Inane warning",
                             JOptionPane.WARNING_MESSAGE);
                 } else {
-                    WindowController.getInstance().addWindow(new MainWindow(this.getDb(), user));
+                    WindowController.getInstance().createMainWindow(user);
+                    WindowController.getInstance().showMainWindow();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(LoginWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -169,5 +167,10 @@ public class LoginWindow extends Window {
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public Window copy() {
+        return new LoginWindow();
+    }
 
 }
