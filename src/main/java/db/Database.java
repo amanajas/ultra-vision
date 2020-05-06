@@ -12,7 +12,6 @@ import db.entities.UserDAO;
 import entities.Card;
 import entities.Rental;
 import entities.User;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -171,10 +170,10 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public Boolean addCustomerRental(User customer, Rental title) {
+	public Boolean addCustomerRental(User customer, Rental title, boolean status) {
             try {
                 // TODO Auto-generated method stub
-                return this.rentStatus.insertRentStatus(customer, title) > 0;
+                return this.rentStatus.insertRentStatus(customer, title, true) > 0;
             } catch (SQLException ex) {
                 Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -182,10 +181,10 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public Boolean addCustomerReturn(User customer, Rental title) {
+	public Boolean addCustomerReturn(User customer, Rental title, boolean status) {
             try {
                 // TODO Auto-generated method stub
-                return this.rentStatus.updateRentStatus(customer, title);
+                return this.rentStatus.updateRentStatus(customer, title, false);
             } catch (SQLException ex) {
                 Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
             }

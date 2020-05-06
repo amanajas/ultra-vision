@@ -5,6 +5,8 @@
  */
 package gui;
 
+import controllers.RentController;
+import controllers.UserController;
 import controllers.WindowController;
 import db.Database;
 import entities.Rental;
@@ -27,7 +29,8 @@ public class RentStatusForm extends Window {
     public static final String NAME = "rentStatus";
     private List<User> users;
     private List<Rental> rentals;
-    private RentalStatus rentStatus;
+    private final RentController rentController;
+    private final UserController userController;
     
     /**
      * Creates new form RentStatusForm
@@ -35,6 +38,8 @@ public class RentStatusForm extends Window {
     public RentStatusForm() {
         super(NAME);
         initComponents();
+        this.rentController = new RentController();
+        this.userController = new UserController();
         this.customerIDField.addKeyListener(new OnlyNumber(this.customerIDField));
     }
     /**
@@ -204,15 +209,7 @@ public class RentStatusForm extends Window {
             try {
                 int userId = Integer.valueOf(this.customerIDField.getText());
                 int rentalId = Integer.valueOf(this.rentFieldStatus.getText());
-                if (Database.getInstance().getRentStatus().hasBooking(userId, rentalId)) {
-                    Database.getInstance().getRentStatus().updateRentStatus(
-                            (User) Database.getInstance().getUser().getByID(userId), 
-                            (Rental) Database.getInstance().getRental().getByID(rentalId));
-                } else {
-                    Database.getInstance().getRentStatus().insertRentStatus(
-                            (User) Database.getInstance().getUser().getByID(userId), 
-                            (Rental) Database.getInstance().getRental().getByID(rentalId));
-                }
+                this.rentController.addRentStatus(userId, rentalId, active);
             } catch (SQLException ex) {
                 Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -224,7 +221,7 @@ public class RentStatusForm extends Window {
         String name = this.customerNameField.getText();
         if (!id.isEmpty() && NumberUtils.isNumeric(id)) {
             try {
-                User user = (User) Database.getInstance().getUser().getByID(Integer.valueOf(id));
+                User user = this.userController.getUser(Integer.valueOf(id));
                 if (user != null) {
                     this.customerIDField.setText(String.valueOf(user.getId()));
                     this.customerNameField.setText(user.getName());
@@ -239,11 +236,7 @@ public class RentStatusForm extends Window {
             }
         } else if (!name.isEmpty()) {
             try {
-                List<User> list = Database.getInstance().getUser().get(name);
-                User user = null;
-                if (list.size() > 0) {
-                    user = list.get(0);
-                }
+                User user = this.userController.getUserByName(name);
                 if (user != null) {
                     this.customerIDField.setText(String.valueOf(user.getId()));
                     this.customerNameField.setText(user.getName());
@@ -272,11 +265,7 @@ public class RentStatusForm extends Window {
         String title = this.rentalTitleSearchField.getText();
         if (!title.isEmpty()) {
             try {
-                List<Rental> list = Database.getInstance().getRental().get(title);
-                Rental rental = null;
-                if (list.size() > 0) {
-                    rental = list.get(0);
-                }
+                Rental rental = this.rentController.getRentByTitle(title);
                 if (rental != null) {
                     this.rentFieldStatus.setText(String.valueOf(rental.getId()));
                 } else {
@@ -309,19 +298,13 @@ public class RentStatusForm extends Window {
         this.customerNameField.setText("");
         this.rentalTitleSearchField.setText("");
         this.updateStatusButton.setSelected(true);
-        this.rentStatus = null;
     }
 
     public void setSelectedRentStatus(User user, Rental rental) {
         this.customerIDField.setText(String.valueOf(user.getId()));
         this.customerNameField.setText(String.valueOf(user.getName()));
         this.rentalTitleSearchField.setText(rental.getTitle());
-        this.rentStatus = null;
-        try {
-            this.rentStatus = Database.getInstance().getRentStatus().get(user, rental);
-        } catch (SQLException ex) {
-            Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        this.searchRentalButtonActionPerformed(null);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
