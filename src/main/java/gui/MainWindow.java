@@ -6,7 +6,13 @@
 package gui;
 
 import controllers.WindowController;
+import db.Database;
+import entities.Rental;
 import entities.User;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -33,11 +39,12 @@ public class MainWindow extends Window {
     private void initComponents() {
 
         desktopPane = new javax.swing.JDesktopPane();
-        addNewRentButton = new javax.swing.JButton();
         rentStatusTableScroll = new javax.swing.JScrollPane();
         rentStatusTable = new javax.swing.JTable();
-        updateSelectedRentButton = new javax.swing.JButton();
         searchRentStatusField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        editSelectedRentButton = new javax.swing.JButton();
+        addRentButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         exportDataMenuItem = new javax.swing.JMenuItem();
@@ -67,12 +74,7 @@ public class MainWindow extends Window {
             }
         });
 
-        addNewRentButton.setText("Add new rent");
-        addNewRentButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addNewRentButtonActionPerformed(evt);
-            }
-        });
+        desktopPane.setBackground(java.awt.Color.white);
 
         rentStatusTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -105,43 +107,58 @@ public class MainWindow extends Window {
         rentStatusTableScroll.setViewportView(rentStatusTable);
         rentStatusTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        updateSelectedRentButton.setText("Update selected rent");
-        updateSelectedRentButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateSelectedRentButtonActionPerformed(evt);
-            }
-        });
-
         searchRentStatusField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         searchRentStatusField.setToolTipText("Search rent status by Title or Customer name");
 
-        desktopPane.setLayer(addNewRentButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLabel1.setText("Search rent status:");
+
+        editSelectedRentButton.setText("Edit selected value");
+        editSelectedRentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editSelectedRentButtonActionPerformed(evt);
+            }
+        });
+
+        addRentButton.setText("Add rent");
+        addRentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addRentButtonActionPerformed(evt);
+            }
+        });
+
         desktopPane.setLayer(rentStatusTableScroll, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        desktopPane.setLayer(updateSelectedRentButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktopPane.setLayer(searchRentStatusField, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktopPane.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktopPane.setLayer(editSelectedRentButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktopPane.setLayer(addRentButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
         desktopPane.setLayout(desktopPaneLayout);
         desktopPaneLayout.setHorizontalGroup(
             desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, desktopPaneLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(searchRentStatusField)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(updateSelectedRentButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addNewRentButton)
-                .addGap(65, 65, 65))
-            .addComponent(rentStatusTableScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 753, Short.MAX_VALUE)
+            .addComponent(rentStatusTableScroll)
+            .addGroup(desktopPaneLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(desktopPaneLayout.createSequentialGroup()
+                        .addComponent(searchRentStatusField, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editSelectedRentButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addRentButton))
+                    .addComponent(jLabel1))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         desktopPaneLayout.setVerticalGroup(
             desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(desktopPaneLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(22, 22, 22)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addNewRentButton)
-                    .addComponent(updateSelectedRentButton)
-                    .addComponent(searchRentStatusField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(searchRentStatusField, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editSelectedRentButton)
+                    .addComponent(addRentButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rentStatusTableScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE))
         );
@@ -239,25 +256,37 @@ public class MainWindow extends Window {
         WindowController.getInstance().showLogin();
     }//GEN-LAST:event_formWindowClosed
 
-    private void addNewRentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewRentButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addNewRentButtonActionPerformed
+    private void addRentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRentButtonActionPerformed
+        WindowController.getInstance().showRentStatusForm();
+    }//GEN-LAST:event_addRentButtonActionPerformed
 
-    private void updateSelectedRentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateSelectedRentButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_updateSelectedRentButtonActionPerformed
+    private void editSelectedRentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSelectedRentButtonActionPerformed
+        try {
+            // TODO: Put user and rental selected into the form
+            int selectedRow = this.rentStatusTable.getSelectedRow();
+            String selectedTitleValue = (String) this.rentStatusTable.getValueAt(selectedRow, 0);
+            List<Rental> rental = Database.getInstance().getRental().get(selectedTitleValue);
+            if (rental.size() > 0) {
+                WindowController.getInstance().showRentStatusForm(this.user, rental.get(0));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_editSelectedRentButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addCustomerMenuItem;
-    private javax.swing.JButton addNewRentButton;
+    private javax.swing.JButton addRentButton;
     private javax.swing.JMenuItem addRentalMenuItem;
     private javax.swing.JMenu customerMenu;
     private javax.swing.JMenuItem deleteCustomerMenuItem;
     private javax.swing.JDesktopPane desktopPane;
+    private javax.swing.JButton editSelectedRentButton;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenuItem exportDataMenuItem;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -270,12 +299,16 @@ public class MainWindow extends Window {
     private javax.swing.JMenuItem searchRentalMenuItem;
     private javax.swing.JMenuItem updateCustomerMenuItem;
     private javax.swing.JMenuItem updateRentalMenuItem;
-    private javax.swing.JButton updateSelectedRentButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public Window copy() {
         return new MainWindow(this.user);
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

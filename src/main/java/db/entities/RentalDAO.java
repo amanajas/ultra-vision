@@ -51,7 +51,7 @@ public class RentalDAO extends DAO implements IRentalDAO {
                         + "r.created AS created, r.title AS title "
                         + "FROM rentals AS r "
                         + "JOIN rental_category AS rc ON rc.id=r.category_id "
-			+ "WHERE r.title LIKE '%" + title + "'%");
+			+ "WHERE r.title LIKE '%" + title + "'%;");
 
             List<Rental> rentals = new ArrayList<>();
             result.forEach((map) -> {
@@ -64,5 +64,24 @@ public class RentalDAO extends DAO implements IRentalDAO {
             });
             return rentals;
 	}
+
+        @Override
+        public List<Rental> getAll() throws SQLException {
+            List<Map<String, Object>> result = this.db.query("SELECT r.id AS id, rc.description AS description, "
+                        + "r.created AS created, r.title AS title "
+                        + "FROM rentals AS r "
+                        + "JOIN rental_category AS rc ON rc.id=r.category_id;");
+
+            List<Rental> rentals = new ArrayList<>();
+            result.forEach((map) -> {
+                rentals.add(new Rental(
+                        (int) map.get("id"),
+                        (String) map.get("title"),
+                        Rental.Category.valueOf(String.valueOf(map.get("description"))),
+                        new Date((long) map.get("create")))
+                );
+            });
+            return rentals;
+        }
 
 }

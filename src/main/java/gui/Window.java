@@ -5,25 +5,26 @@
  */
 package gui;
 
-import db.Database;
-
 /**
  *
  * @author thiago.amanajas
  */
 public abstract class Window extends javax.swing.JFrame {
-    private String name;
+    private final String name;
     /**
      * Creates new form NewApplication
-     * @param db
+     * @param name
      */
     public Window(String name) {
         this.name = name;
     }
     
+    @Override
     public String getName() {
         return name;
     }
+    
+    public abstract void clear();
     
     public abstract Window copy();
     

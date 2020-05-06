@@ -5,9 +5,11 @@
  */
 package controllers;
 
+import entities.Rental;
 import entities.User;
 import gui.LoginWindow;
 import gui.MainWindow;
+import gui.RentStatusForm;
 import gui.Window;
 import java.util.HashMap;
 
@@ -28,6 +30,14 @@ public class WindowController implements IWindowController {
     }
 
     @Override
+    public void showLogin() {
+        if (this.windows.get(LoginWindow.NAME) == null) {
+            this.addWindow(new LoginWindow());
+        }
+        this.showWindow(LoginWindow.NAME, true);
+    }
+    
+    @Override
     public void showMainWindow() {
         this.showWindow(MainWindow.NAME, true);
     }
@@ -40,13 +50,27 @@ public class WindowController implements IWindowController {
     }
 
     @Override
-    public void showLogin() {
-        if (this.windows.get(LoginWindow.NAME) == null) {
-            this.addWindow(new LoginWindow());
+    public void showRentStatusForm() {
+        RentStatusForm rentStatusForm = (RentStatusForm) this.windows.get(RentStatusForm.NAME);
+        if (rentStatusForm == null) {
+            rentStatusForm = new RentStatusForm();
+            this.addWindow(rentStatusForm);
         }
-        this.showWindow(LoginWindow.NAME, true);
+        rentStatusForm.clear();
+        this.showWindow(RentStatusForm.NAME, true);
     }
-    
+
+    @Override
+    public void showRentStatusForm(User user, Rental rental) {
+        RentStatusForm rentStatusForm = (RentStatusForm) this.windows.get(RentStatusForm.NAME);
+        if (rentStatusForm == null) {
+            rentStatusForm = new RentStatusForm();
+            this.addWindow(rentStatusForm);
+        }
+        rentStatusForm.setSelectedRentStatus(user, rental);
+        this.showWindow(RentStatusForm.NAME, true);
+    }
+
     private static class WindowControllerHolder {
         private static final WindowController INSTANCE = new WindowController();
     }

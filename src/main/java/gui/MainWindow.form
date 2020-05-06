@@ -163,30 +163,42 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JDesktopPane" name="desktopPane">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
+        </Property>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="searchRentStatusField" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="updateSelectedRentButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="addNewRentButton" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
+              <Component id="rentStatusTableScroll" alignment="0" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="searchRentStatusField" min="-2" pref="396" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="editSelectedRentButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="addRentButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="90" max="32767" attributes="0"/>
               </Group>
-              <Component id="rentStatusTableScroll" alignment="0" pref="753" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="addNewRentButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="updateSelectedRentButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="searchRentStatusField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="searchRentStatusField" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
+                      <Component id="editSelectedRentButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="addRentButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="rentStatusTableScroll" pref="451" max="32767" attributes="0"/>
@@ -195,14 +207,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="addNewRentButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Add new rent"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addNewRentButtonActionPerformed"/>
-          </Events>
-        </Component>
         <Container class="javax.swing.JScrollPane" name="rentStatusTableScroll">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -252,19 +256,32 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JButton" name="updateSelectedRentButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Update selected rent"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateSelectedRentButtonActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JTextField" name="searchRentStatusField">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="toolTipText" type="java.lang.String" value="Search rent status by Title or Customer name"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Search rent status:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="editSelectedRentButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Edit selected value"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editSelectedRentButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="addRentButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Add rent"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addRentButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -173,4 +173,9 @@ public class LoginWindow extends Window {
         return new LoginWindow();
     }
 
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
