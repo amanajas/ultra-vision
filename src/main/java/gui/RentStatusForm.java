@@ -10,15 +10,11 @@ import db.Database;
 import entities.Rental;
 import entities.RentalStatus;
 import entities.User;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
 import utils.NumberUtils;
 import utils.keyboard.adapter.OnlyNumber;
 
@@ -202,8 +198,25 @@ public class RentStatusForm extends Window {
     }//GEN-LAST:event_formWindowClosed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        this.updateStatusButton.isSelected();
-        // TODO: SAVE RENT STATUS
+        if (NumberUtils.isNumeric(this.customerIDField.getText()) &&
+                NumberUtils.isNumeric(this.rentFieldStatus.getText())) {
+            boolean active = this.updateStatusButton.isSelected();
+            try {
+                int userId = Integer.valueOf(this.customerIDField.getText());
+                int rentalId = Integer.valueOf(this.rentFieldStatus.getText());
+                if (Database.getInstance().getRentStatus().hasBooking(userId, rentalId)) {
+                    Database.getInstance().getRentStatus().updateRentStatus(
+                            (User) Database.getInstance().getUser().getByID(userId), 
+                            (Rental) Database.getInstance().getRental().getByID(rentalId));
+                } else {
+                    Database.getInstance().getRentStatus().insertRentStatus(
+                            (User) Database.getInstance().getUser().getByID(userId), 
+                            (Rental) Database.getInstance().getRental().getByID(rentalId));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void searchCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchCustomerButtonActionPerformed

@@ -1,7 +1,5 @@
 package db.entities;
 
-import db.Database;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.SQLDatabase;
@@ -94,6 +92,15 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
                 + "WHERE rs.user_id=#1 AND rs.rental_id=#2;";
         List<RentalStatus> status = this.get(sql, user, rental);
         return status.size() > 0 ? status.get(0) : null;
+    }
+
+    @Override
+    public boolean hasBooking(int userId, int rentalId) throws SQLException {
+        String sql = "SELECT count(*) as count "
+                + "FROM rental_status AS rs "
+                + "WHERE rs.user_id=#1 AND rs.rental_id=#2;";
+        List<Map<String, Object>> status = this.db.query(sql, userId, rentalId);
+        return ((int) status.get(0).get("count")) > 0;
     }
 
 }

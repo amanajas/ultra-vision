@@ -13,4 +13,5 @@ public interface IRentStatusDAO {
 	boolean updateRentStatus(User user,Rental rental) throws SQLException;
         List<RentalStatus> get(User user) throws SQLException;
         RentalStatus get(User user, Rental rental) throws SQLException;
+        boolean hasBooking(int userId, int rentalId) throws SQLException;
 }
