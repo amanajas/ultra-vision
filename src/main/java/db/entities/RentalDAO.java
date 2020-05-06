@@ -51,7 +51,7 @@ public class RentalDAO extends DAO implements IRentalDAO {
                         + "r.created AS created, r.title AS title "
                         + "FROM rentals AS r "
                         + "JOIN rental_category AS rc ON rc.id=r.category_id "
-			+ "WHERE r.title LIKE '%" + title + "'%;");
+			+ "WHERE r.title LIKE '%" + title + "%';");
 
             List<Rental> rentals = new ArrayList<>();
             result.forEach((map) -> {

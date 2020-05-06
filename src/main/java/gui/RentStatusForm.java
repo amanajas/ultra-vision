@@ -10,13 +10,17 @@ import db.Database;
 import entities.Rental;
 import entities.RentalStatus;
 import entities.User;
-import gui.components.AutoComplete;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import utils.NumberUtils;
+import utils.keyboard.adapter.OnlyNumber;
 
 /**
  *
@@ -35,41 +39,8 @@ public class RentStatusForm extends Window {
     public RentStatusForm() {
         super(NAME);
         initComponents();
-        updateFields();
-        rentStatus = null;
+        this.customerIDField.addKeyListener(new OnlyNumber(this.customerIDField));
     }
-    
-    private void updateFields() {
-        try {
-            this.users = Database.getInstance().getUser().getAll();
-            this.rentals = Database.getInstance().getRental().getAll();
-            List<String> autoCompleteUserIDs = new ArrayList<>();
-            List<String> autoCompleteUsers = new ArrayList<>();
-            List<String> autoCompleteRentals = new ArrayList<>();
-            for (int i = 0; i < users.size(); i++) {
-                autoCompleteUserIDs.add(String.valueOf(users.get(i).getId()));
-                autoCompleteUsers.add(users.get(i).getName());
-            }
-            for (int i = 0; i < rentals.size(); i++) {
-                autoCompleteRentals.add(rentals.get(i).getTitle());
-            }
-            this.customerIDField.setFocusTraversalKeysEnabled(false);
-            this.customerNameField.setFocusTraversalKeysEnabled(false);
-            this.rentalTitleSearchField.setFocusTraversalKeysEnabled(false);
-            AutoComplete autoCompleteId = new AutoComplete(this.customerIDField, autoCompleteUserIDs);
-            AutoComplete autoCompleteName = new AutoComplete(this.customerNameField, autoCompleteUsers);
-            AutoComplete autoCompleteTitle = new AutoComplete(this.rentalTitleSearchField, autoCompleteRentals);
-            this.customerIDField.getDocument().addDocumentListener(autoCompleteId);
-            this.customerNameField.getDocument().addDocumentListener(autoCompleteName);
-            this.rentalTitleSearchField.getDocument().addDocumentListener(autoCompleteTitle);
-            
-            this.customerIDField.getInputMap().put(KeyStroke.getKeyStroke("TAB"), AutoComplete.COMMIT_ACTION);
-            this.customerIDField.getActionMap().put(AutoComplete.COMMIT_ACTION, autoCompleteId.new CommitAction());
-        } catch (SQLException ex) {
-            Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -88,6 +59,10 @@ public class RentStatusForm extends Window {
         saveButton = new javax.swing.JButton();
         updateStatusButton = new javax.swing.JToggleButton();
         jLabel4 = new javax.swing.JLabel();
+        searchCustomerButton = new javax.swing.JButton();
+        searchRentalButton = new javax.swing.JButton();
+        rentFieldStatus = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Rent status");
@@ -100,14 +75,22 @@ public class RentStatusForm extends Window {
         });
 
         customerNameField.setToolTipText("Type the name of the customer");
+        customerNameField.setDragEnabled(false);
 
         jLabel1.setText("Customer name:");
 
         jLabel2.setText("Customer ID:");
 
         customerIDField.setToolTipText("Type the ID of the customer");
+        customerIDField.setDragEnabled(false);
+        customerIDField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerIDFieldActionPerformed(evt);
+            }
+        });
 
         rentalTitleSearchField.setToolTipText("Type the rental title");
+        rentalTitleSearchField.setDragEnabled(false);
 
         jLabel3.setText("Rental title:");
 
@@ -122,6 +105,25 @@ public class RentStatusForm extends Window {
 
         jLabel4.setText("Rent status:");
 
+        searchCustomerButton.setText("search");
+        searchCustomerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchCustomerButtonActionPerformed(evt);
+            }
+        });
+
+        searchRentalButton.setText("search");
+        searchRentalButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchRentalButtonActionPerformed(evt);
+            }
+        });
+
+        rentFieldStatus.setDragEnabled(false);
+        rentFieldStatus.setEnabled(false);
+
+        jLabel5.setText("Rental ID:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -134,25 +136,31 @@ public class RentStatusForm extends Window {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(customerIDField)
+                    .addComponent(rentFieldStatus)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(rentalTitleSearchField)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel5))
+                        .addGap(0, 43, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(customerNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                        .addComponent(searchCustomerButton)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(0, 43, Short.MAX_VALUE))
-                            .addComponent(customerIDField))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(customerNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                                .addComponent(rentalTitleSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(searchRentalButton)))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -165,12 +173,18 @@ public class RentStatusForm extends Window {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(customerNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(customerIDField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addComponent(jLabel3)
+                    .addComponent(customerIDField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchCustomerButton))
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rentalTitleSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rentalTitleSearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchRentalButton)
+                    .addComponent(rentFieldStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -189,7 +203,86 @@ public class RentStatusForm extends Window {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         this.updateStatusButton.isSelected();
+        // TODO: SAVE RENT STATUS
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void searchCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchCustomerButtonActionPerformed
+        String id = this.customerIDField.getText();
+        String name = this.customerNameField.getText();
+        if (!id.isEmpty() && NumberUtils.isNumeric(id)) {
+            try {
+                User user = (User) Database.getInstance().getUser().getByID(Integer.valueOf(id));
+                if (user != null) {
+                    this.customerIDField.setText(String.valueOf(user.getId()));
+                    this.customerNameField.setText(user.getName());
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "It was not possible to find the customer by ID.",
+                            "Inane warning",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (!name.isEmpty()) {
+            try {
+                List<User> list = Database.getInstance().getUser().get(name);
+                User user = null;
+                if (list.size() > 0) {
+                    user = list.get(0);
+                }
+                if (user != null) {
+                    this.customerIDField.setText(String.valueOf(user.getId()));
+                    this.customerNameField.setText(user.getName());
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "It was not possible to find the customer by name.",
+                            "Inane warning",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                            "You need to fill in the customer data.",
+                            "Inane warning",
+                            JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_searchCustomerButtonActionPerformed
+
+    private void customerIDFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerIDFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_customerIDFieldActionPerformed
+
+    private void searchRentalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchRentalButtonActionPerformed
+        String title = this.rentalTitleSearchField.getText();
+        if (!title.isEmpty()) {
+            try {
+                List<Rental> list = Database.getInstance().getRental().get(title);
+                Rental rental = null;
+                if (list.size() > 0) {
+                    rental = list.get(0);
+                }
+                if (rental != null) {
+                    this.rentFieldStatus.setText(String.valueOf(rental.getId()));
+                } else {
+                    this.rentFieldStatus.setText("ID not found");
+                    JOptionPane.showMessageDialog(this,
+                            "It was not possible to find the rental by title.",
+                            "Inane warning",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                            "Type the title of the rental first.",
+                            "Inane warning",
+                            JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_searchRentalButtonActionPerformed
 
 
     @Override
@@ -203,12 +296,14 @@ public class RentStatusForm extends Window {
         this.customerNameField.setText("");
         this.rentalTitleSearchField.setText("");
         this.updateStatusButton.setSelected(true);
+        this.rentStatus = null;
     }
 
     public void setSelectedRentStatus(User user, Rental rental) {
         this.customerIDField.setText(String.valueOf(user.getId()));
         this.customerNameField.setText(String.valueOf(user.getName()));
         this.rentalTitleSearchField.setText(rental.getTitle());
+        this.rentStatus = null;
         try {
             this.rentStatus = Database.getInstance().getRentStatus().get(user, rental);
         } catch (SQLException ex) {
@@ -223,8 +318,12 @@ public class RentStatusForm extends Window {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JTextField rentFieldStatus;
     private javax.swing.JTextField rentalTitleSearchField;
     private javax.swing.JButton saveButton;
+    private javax.swing.JButton searchCustomerButton;
+    private javax.swing.JButton searchRentalButton;
     private javax.swing.JToggleButton updateStatusButton;
     // End of variables declaration//GEN-END:variables
 
