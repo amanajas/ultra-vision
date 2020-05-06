@@ -53,4 +53,9 @@ public class MembershipDAO extends DAO implements IMembership {
 		return member;
 	}
 
+    @Override
+    public Object getByID(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

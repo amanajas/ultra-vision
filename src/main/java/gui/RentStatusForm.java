@@ -8,6 +8,7 @@ package gui;
 import controllers.WindowController;
 import db.Database;
 import entities.Rental;
+import entities.RentalStatus;
 import entities.User;
 import gui.components.AutoComplete;
 import java.sql.SQLException;
@@ -26,6 +27,7 @@ public class RentStatusForm extends Window {
     public static final String NAME = "rentStatus";
     private List<User> users;
     private List<Rental> rentals;
+    private RentalStatus rentStatus;
     
     /**
      * Creates new form RentStatusForm
@@ -34,6 +36,7 @@ public class RentStatusForm extends Window {
         super(NAME);
         initComponents();
         updateFields();
+        rentStatus = null;
     }
     
     private void updateFields() {
@@ -109,6 +112,11 @@ public class RentStatusForm extends Window {
         jLabel3.setText("Rental title:");
 
         saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         updateStatusButton.setText("Active");
 
@@ -179,6 +187,10 @@ public class RentStatusForm extends Window {
         WindowController.getInstance().showMainWindow();
     }//GEN-LAST:event_formWindowClosed
 
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        this.updateStatusButton.isSelected();
+    }//GEN-LAST:event_saveButtonActionPerformed
+
 
     @Override
     public Window copy() {
@@ -187,13 +199,21 @@ public class RentStatusForm extends Window {
 
     @Override
     public void clear() {
-        // TODO: Clear all fields
+        this.customerIDField.setText("");
+        this.customerNameField.setText("");
+        this.rentalTitleSearchField.setText("");
+        this.updateStatusButton.setSelected(true);
     }
 
     public void setSelectedRentStatus(User user, Rental rental) {
         this.customerIDField.setText(String.valueOf(user.getId()));
         this.customerNameField.setText(String.valueOf(user.getName()));
         this.rentalTitleSearchField.setText(rental.getTitle());
+        try {
+            this.rentStatus = Database.getInstance().getRentStatus().get(user, rental);
+        } catch (SQLException ex) {
+            Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -47,4 +47,9 @@ public class LoyaltyDAO extends DAO implements ILoyaltyDAO {
         return id;
     }
 
+    @Override
+    public Object getByID(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

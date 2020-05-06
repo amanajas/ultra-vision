@@ -106,4 +106,24 @@ public class UserDAO extends DAO implements IUserDAO {
 		return list;
 	}
 
+        @Override
+        public Object getByID(int id) throws SQLException {
+            List<Map<String, Object>> result = this.db.query("SELECT u.id AS id, u.name AS name, "
+                            + "u.member_id AS mid "
+                            + "FROM users AS u "
+                            + "WHERE u.id=#1;", id);
+
+            List<User> list = new ArrayList<>();
+            for(Map<String, Object> map : result){
+                list.add(new User(
+                            (int) map.get("id"),
+                            (String) map.get("name"),
+                            this.loyalty.get((int) map.get("id")),
+                            this.membership.get((int) map.get("mid")),
+                            this.cards.get((int) map.get("id")))
+                );	
+            }
+            return list.size() > 0 ? list.get(0) : null;
+    }
+
 }

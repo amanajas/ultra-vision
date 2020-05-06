@@ -84,4 +84,24 @@ public class RentalDAO extends DAO implements IRentalDAO {
             return rentals;
         }
 
+        @Override
+        public Object getByID(int id)  throws SQLException {
+            List<Map<String, Object>> result = this.db.query("SELECT r.id AS id, rc.description AS description, "
+                        + "r.created AS created, r.title AS title "
+                        + "FROM rentals AS r "
+                        + "JOIN rental_category AS rc ON rc.id=r.category_id "
+                    + "WHERE r.id=#1;", id);
+
+            List<Rental> rentals = new ArrayList<>();
+            result.forEach((map) -> {
+                rentals.add(new Rental(
+                        (int) map.get("id"),
+                        (String) map.get("title"),
+                        Rental.Category.valueOf(String.valueOf(map.get("description"))),
+                        new Date((long) map.get("create")))
+                );
+            });
+            return rentals.size() > 0 ? rentals.get(0) : null;
+        }
+
 }
