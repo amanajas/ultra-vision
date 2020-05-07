@@ -9,6 +9,7 @@ import controllers.RentController;
 import controllers.WindowController;
 import db.Database;
 import entities.Rental;
+import entities.RentalStatus;
 import entities.User;
 import java.sql.SQLException;
 import java.util.List;
@@ -36,8 +37,7 @@ public class MainWindow extends Window {
     public final void refreshList() {
         try {
             this.rentStatusTable.setModel(new RentStatusTable(
-                    this.rentController.getAllRents())
-            );
+                    this.rentController.getAllRents()));
         } catch (SQLException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -80,7 +80,7 @@ public class MainWindow extends Window {
         setTitle("Ultra-Vision");
         setAlwaysOnTop(true);
         setName("frameWindow"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(700, 500));
+        setPreferredSize(new java.awt.Dimension(900, 500));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -93,7 +93,8 @@ public class MainWindow extends Window {
 
         desktopPane.setBackground(java.awt.Color.white);
 
-        rentStatusTable.setColumnSelectionAllowed(true);
+        rentStatusTable.setFocusable(false);
+        rentStatusTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         rentStatusTable.getTableHeader().setReorderingAllowed(false);
         rentStatusTableScroll.setViewportView(rentStatusTable);
         rentStatusTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -252,21 +253,21 @@ public class MainWindow extends Window {
     }//GEN-LAST:event_addRentButtonActionPerformed
 
     private void editSelectedRentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSelectedRentButtonActionPerformed
-        try {
-            // TODO: Put user and rental selected into the form
-            int selectedRow = this.rentStatusTable.getSelectedRow();
-            String selectedTitleValue = (String) this.rentStatusTable.getValueAt(selectedRow, 0);
-            List<Rental> rental = Database.getInstance().getRental().get(selectedTitleValue);
-            if (rental.size() > 0) {
-                WindowController.getInstance().showRentStatusForm(this.user, rental.get(0));
+        // TODO: Put user and rental selected into the form
+        int selectedRow = this.rentStatusTable.getSelectedRow();
+        System.out.println("ROW: " + selectedRow);
+        if (selectedRow >= 0) {
+            RentalStatus selectedTitleValue = (RentalStatus) (
+                    (RentStatusTable)this.rentStatusTable.getModel()
+                    ).getRow(selectedRow);
+            if (selectedTitleValue != null) {
+                WindowController.getInstance().showRentStatusForm(selectedTitleValue);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_editSelectedRentButtonActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        
+        refreshList();
     }//GEN-LAST:event_formWindowActivated
 
 

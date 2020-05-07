@@ -8,7 +8,6 @@ package gui;
 import controllers.RentController;
 import controllers.UserController;
 import controllers.WindowController;
-import db.Database;
 import entities.Rental;
 import entities.RentalStatus;
 import entities.User;
@@ -31,6 +30,7 @@ public class RentStatusForm extends Window {
     private List<Rental> rentals;
     private final RentController rentController;
     private final UserController userController;
+    private RentalStatus rentalStatus;
     
     /**
      * Creates new form RentStatusForm
@@ -38,6 +38,7 @@ public class RentStatusForm extends Window {
     public RentStatusForm() {
         super(NAME);
         initComponents();
+        this.rentalStatus = null;
         this.rentController = new RentController();
         this.userController = new UserController();
         this.customerIDField.addKeyListener(new OnlyNumber(this.customerIDField));
@@ -209,7 +210,20 @@ public class RentStatusForm extends Window {
             try {
                 int userId = Integer.valueOf(this.customerIDField.getText());
                 int rentalId = Integer.valueOf(this.rentFieldStatus.getText());
-                this.rentController.addRentStatus(userId, rentalId, active);
+                String rentalName = this.rentalTitleSearchField.getText();
+                if (this.rentController.addRentStatus(rentalStatus.getId(), userId, rentalId, active)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Rental updated.",
+                            "Inane ok",
+                            JOptionPane.WARNING_MESSAGE);
+                    WindowController.getInstance().showMainWindow();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "It was not possible to update the rental status.",
+                            "Inane warning",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                
             } catch (SQLException ex) {
                 Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -298,12 +312,19 @@ public class RentStatusForm extends Window {
         this.customerNameField.setText("");
         this.rentalTitleSearchField.setText("");
         this.updateStatusButton.setSelected(true);
+        this.customerNameField.setEnabled(true);
+        this.rentalTitleSearchField.setEnabled(true);
+        this.rentalStatus = null;
     }
 
-    public void setSelectedRentStatus(User user, Rental rental) {
-        this.customerIDField.setText(String.valueOf(user.getId()));
-        this.customerNameField.setText(String.valueOf(user.getName()));
-        this.rentalTitleSearchField.setText(rental.getTitle());
+    public void setSelectedRentStatus(RentalStatus rentalStatus) {
+        this.rentalStatus = rentalStatus;
+        this.customerIDField.setText(String.valueOf(rentalStatus.getUser().getId()));
+        this.customerNameField.setText(String.valueOf(rentalStatus.getUser().getName()));
+        this.rentalTitleSearchField.setText(rentalStatus.getRental().getTitle());
+        this.customerNameField.setEnabled(false);
+        this.rentalTitleSearchField.setEnabled(false);
+        this.updateStatusButton.setSelected(rentalStatus.getStatus());
         this.searchRentalButtonActionPerformed(null);
     }
 

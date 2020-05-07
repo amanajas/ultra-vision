@@ -100,7 +100,7 @@ public class SQLDatabase {
         }
         
         public boolean update(String sql, Object... values) {
-            return (boolean) this.query(sql, true, values).get(0).get("last_insert_rowid()");
+            return (int) this.query(sql, true, values).get(0).get("last_insert_rowid()") > 0;
         }
 	
         public List<Map<String, Object>> query(String sql, Object... values) {

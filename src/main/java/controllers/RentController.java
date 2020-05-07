@@ -18,14 +18,14 @@ import java.util.List;
  */
 public class RentController {
     
-    public void addRentStatus(int userId, int rentalId, boolean status) throws SQLException {
-        if (Database.getInstance().getRentStatus().hasBooking(userId, rentalId)) {
-            Database.getInstance().addCustomerRental(
+    public boolean addRentStatus(int rentalStatusId, int userId, int rentalId, boolean status) throws SQLException {
+        if (!Database.getInstance().getRentStatus().hasBooking(userId, rentalId)) {
+            return Database.getInstance().addCustomerRental(
                     (User) Database.getInstance().getUser().getByID(userId), 
                     (Rental) Database.getInstance().getRental().getByID(rentalId),
                     status);
         } else {
-            Database.getInstance().addCustomerReturn(
+            return Database.getInstance().addCustomerReturn(rentalStatusId,
                     (User) Database.getInstance().getUser().getByID(userId), 
                     (Rental) Database.getInstance().getRental().getByID(rentalId),
                     status);
@@ -39,6 +39,11 @@ public class RentController {
     
     public List<RentalStatus> getAllRents() throws SQLException {
         return Database.getInstance().getRentStatus().getAll();
+    }
+
+    public boolean hasActive(User user, Rental rental) throws SQLException {
+        return Database.getInstance().getRentStatus().hasActiveBooking(user.getId(), 
+                rental.getId());
     }
     
 }

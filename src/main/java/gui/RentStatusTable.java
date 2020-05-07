@@ -18,7 +18,25 @@ public class RentStatusTable extends AbstractTableModel{
     private final List<RentalStatus> rentStatus;
 
     public RentStatusTable(List<RentalStatus> rentStatus) {
+        super();
         this.rentStatus = new ArrayList<>(rentStatus);
+    }
+    
+    @Override
+    public String getColumnName(int column) {
+        switch (column) {
+            case 0:
+                return "Status";
+            case 1:
+                return "Customer name";
+            case 2:
+                return "Rental title";
+            case 3:
+                return "Created on";
+            case 4:
+                return "Updated on";
+        }
+        return "";
     }
 
     @Override
@@ -28,7 +46,7 @@ public class RentStatusTable extends AbstractTableModel{
 
     @Override
     public int getColumnCount() {
-        return 6;
+        return 5;
     }
 
     @Override
@@ -36,22 +54,24 @@ public class RentStatusTable extends AbstractTableModel{
 
         Object value = "??";
         RentalStatus status = this.rentStatus.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                value = status.getId();
-                break;
-            case 1:
-                value = status.getUser().getName();
-                break;
-            case 2:
-                value = status.getRental().getTitle();
-                break;
-            case 3:
-                value = status.getCreated().toString();
-                break;
-            case 4:
-                value = status.getUpdated().toString();
-                break;
+        if (rowIndex > -1) {
+            switch (columnIndex) {
+                case 0:
+                    value = status.getStatus();
+                    break;
+                case 1:
+                    value = status.getUser().getName();
+                    break;
+                case 2:
+                    value = status.getRental().getTitle();
+                    break;
+                case 3:
+                    value = status.getCreated().toString();
+                    break;
+                case 4:
+                    value = status.getUpdated().toString();
+                    break;
+            }
         }
 
         return value;
@@ -62,7 +82,7 @@ public class RentStatusTable extends AbstractTableModel{
     public Class<?> getColumnClass(int columnIndex) {
        switch (columnIndex) {
             case 0:
-                return Integer.class;
+                return Boolean.class;
             case 1:
                 return String.class;
             case 2:
@@ -81,11 +101,11 @@ public class RentStatusTable extends AbstractTableModel{
     */
 
     /**
-     * This will return the user at the specified row...
+     * This will return the object at the specified row...
      * @param row
      * @return 
      */
-    public RentalStatus getUserAt(int row) {
+    public RentalStatus getRow(int row) {
         return this.rentStatus.get(row);
     }
 

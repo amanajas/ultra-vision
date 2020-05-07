@@ -29,14 +29,14 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
 	@Override
 	public int insertRentStatus(User user, Rental rental, boolean status) throws SQLException {
             String sql = "INSERT INTO rental_status(id, created, updated, status, user_id, rental_id) VALUES(null, null, null, #1, #2, #3);";
-            int id = this.db.insert(sql, status, user.getId(), rental.getId());
+            int id = this.db.insert(sql, status ? 1 : 0, user.getId(), rental.getId());
             return id;
 	}
 
 	@Override
-	public boolean updateRentStatus(User user, Rental rental, boolean status) throws SQLException {
-            String sql = "UPDATE rental_status SET updated=#1, status=#2 WHERE user_id=#3 AND rental_id=#4;";
-            boolean updated = this.db.update(sql, new Date().getTime(), status, user.getId(), rental.getId());
+	public boolean updateRentStatus(int rentalStatusId, User user, Rental rental, boolean status) throws SQLException {
+            String sql = "UPDATE rental_status SET updated=#1, status=#2 WHERE user_id=#3 AND rental_id=#4 AND id=#5;";
+            boolean updated = this.db.update(sql, new Date().getTime(), status ? 1 : 0, user.getId(), rental.getId(), rentalStatusId);
             return updated;
 	}
         
@@ -57,11 +57,10 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
                                     (int) map.get("status_id"),
                                     (User) this.user.getByID((int) map.get("user_id")),
                                     (Rental) this.rental.getByID((int) map.get("rental_id")),
-                                    (boolean) map.get("status"),
-                                    new Date((long) map.get("created")),
-                                    new Date((long) map.get("updated"))
-                            )
-                        );
+                                    (int) map.get("status") > 0,
+                                    new Date((int) map.get("created")),
+                                    new Date((int) map.get("created")))
+                            );
                     } catch (SQLException ex) {
                         Logger.getLogger(RentStatusDAO.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -73,7 +72,7 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
 	@Override
 	public List<RentalStatus> get(User user) throws SQLException {
             String sql = "SELECT rs.id AS status_id, u.id AS user_id, r.id AS rental_id, r.title AS title, "
-                    + "rs.created AS created, rs.updated AS updated "
+                    + "rs.created AS created, rs.updated AS updated, rs.status AS status "
                     + "FROM rental_status AS rs "
                     + "JOIN rentals AS r ON rs.rental_id=r.id "
                     + "JOIN users AS u ON u.id=rs.user_id "
@@ -89,7 +88,7 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
     @Override
     public RentalStatus get(User user, Rental rental) throws SQLException {
         String sql = "SELECT rs.id AS status_id, u.id AS user_id, r.id AS rental_id, r.title AS title, "
-                + "rs.created AS created, rs.updated AS updated "
+                + "rs.created AS created, rs.updated AS updated, rs.status AS status "
                 + "FROM rental_status AS rs "
                 + "JOIN rentals AS r ON rs.rental_id=r.id "
                 + "JOIN users AS u ON u.id=rs.user_id "
@@ -106,11 +105,20 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
         List<Map<String, Object>> status = this.db.query(sql, userId, rentalId);
         return ((int) status.get(0).get("count")) > 0;
     }
+    
+    @Override
+    public boolean hasActiveBooking(int userId, int rentalId) throws SQLException {
+        String sql = "SELECT count(*) as count "
+                + "FROM rental_status AS rs "
+                + "WHERE rs.user_id=#1 AND rs.rental_id=#2 AND status=1;";
+        List<Map<String, Object>> status = this.db.query(sql, userId, rentalId);
+        return ((int) status.get(0).get("count")) > 0;
+    }
 
     @Override
     public List<RentalStatus> getAll() throws SQLException {
         String sql = "SELECT rs.id AS status_id, u.id AS user_id, r.id AS rental_id, r.title AS title, "
-                    + "rs.created AS created, rs.updated AS updated "
+                    + "rs.created AS created, rs.updated AS updated, rs.status AS status "
                     + "FROM rental_status AS rs "
                     + "JOIN rentals AS r ON rs.rental_id=r.id "
                     + "JOIN users AS u ON u.id=rs.user_id;";

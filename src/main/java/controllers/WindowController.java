@@ -6,6 +6,7 @@
 package controllers;
 
 import entities.Rental;
+import entities.RentalStatus;
 import entities.User;
 import gui.LoginWindow;
 import gui.MainWindow;
@@ -61,13 +62,13 @@ public class WindowController implements IWindowController {
     }
 
     @Override
-    public void showRentStatusForm(User user, Rental rental) {
+    public void showRentStatusForm(RentalStatus rentalStatus) {
         RentStatusForm rentStatusForm = (RentStatusForm) this.windows.get(RentStatusForm.NAME);
         if (rentStatusForm == null) {
             rentStatusForm = new RentStatusForm();
             this.addWindow(rentStatusForm);
         }
-        rentStatusForm.setSelectedRentStatus(user, rental);
+        rentStatusForm.setSelectedRentStatus(rentalStatus);
         this.showWindow(RentStatusForm.NAME, true);
     }
 

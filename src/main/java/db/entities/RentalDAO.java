@@ -6,14 +6,10 @@ import db.SQLDatabase;
 import db.dao.DAO;
 import db.dao.IRentalDAO;
 import entities.Rental;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RentalDAO extends DAO implements IRentalDAO {
 
@@ -63,7 +59,7 @@ public class RentalDAO extends DAO implements IRentalDAO {
                         (int) map.get("id"),
                         (String) map.get("title"),
                         Rental.Category.valueOf(String.valueOf(map.get("description"))),
-                        new Date((long) map.get("create")))
+                        new Date(((Integer) map.get("created")).longValue()))
                 );
             });
             return rentals;
@@ -82,7 +78,7 @@ public class RentalDAO extends DAO implements IRentalDAO {
                         (int) map.get("id"),
                         (String) map.get("title"),
                         Rental.Category.valueOf(String.valueOf(map.get("description"))),
-                        new Date((long) map.get("create")))
+                        new Date(((Integer) map.get("created")).longValue()))
                 );
             });
             return rentals;
@@ -98,16 +94,13 @@ public class RentalDAO extends DAO implements IRentalDAO {
 
             List<Rental> rentals = new ArrayList<>();
             result.forEach((Map<String, Object> map) -> {
-                try {
-                    rentals.add(new Rental(
-                            (int) map.get("id"),
-                            (String) map.get("title"),
-                            Rental.Category.valueOf(String.valueOf(map.get("description"))),
-                            new SimpleDateFormat().parse((String) map.get("created")))
-                    );
-                } catch (ParseException ex) {
-                    Logger.getLogger(RentalDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                rentals.add(new Rental(
+                        (int) map.get("id"),
+                        (String) map.get("title"),
+                        Rental.Category.valueOf(String.valueOf(map.get("description"))),
+                        new Date(((Integer) map.get("created")).longValue())
+                    )
+                );
             });
             return rentals.size() > 0 ? rentals.get(0) : null;
         }

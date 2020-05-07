@@ -18,6 +18,6 @@ public interface IDatabase {
 	public List<Rental> searchRental(String title);
 	public Boolean editTitle(Rental title);
 	public Boolean addCustomerRental(User customer, Rental title, boolean status);
-	public Boolean addCustomerReturn(User customer, Rental title, boolean status);
+	public Boolean addCustomerReturn(int rentalId, User customer, Rental title, boolean status);
         public void addCardToUser(User user, Card card);
 }

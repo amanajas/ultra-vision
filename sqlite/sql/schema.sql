@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS  rental_category (
 CREATE TABLE IF NOT EXISTS  rentals ( 
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	title                text NOT NULL    ,
-	created              datetime NOT NULL DEFAULT CURRENT_TIMESTAMP   ,
+	created              INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP   ,
 	category_id          integer NOT NULL    ,
 	FOREIGN KEY ( category_id ) REFERENCES rental_category( id )  
  );
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS  cards (
 	user_id              integer NOT NULL    ,
 	type_id              integer NOT NULL    ,
         number               text NOT NULL       ,
-        expiration              datetime NOT NULL    ,
+        expiration              INTEGER NOT NULL    ,
 	FOREIGN KEY ( user_id ) REFERENCES users( id ),
 	FOREIGN KEY ( type_id ) REFERENCES card_types( id ) 
  );
@@ -61,9 +61,9 @@ CREATE TABLE IF NOT EXISTS  loyalty (
 
 CREATE TABLE IF NOT EXISTS  rental_status ( 
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
-	created              datetime  DEFAULT CURRENT_TIMESTAMP   ,
-	updated              datetime  DEFAULT CURRENT_TIMESTAMP   ,
-	status               boolean NOT NULL    ,
+	created              INTEGER  DEFAULT CURRENT_TIMESTAMP   ,
+	updated              INTEGER  DEFAULT CURRENT_TIMESTAMP   ,
+	status               INTEGER NOT NULL    ,
 	user_id              integer NOT NULL    ,
 	rental_id            integer NOT NULL    ,
 	FOREIGN KEY ( user_id ) REFERENCES users( id )  ,
@@ -83,6 +83,11 @@ INSERT INTO memberships( id, description, type_id ) VALUES ( 4, 'Premium', 4 );
 INSERT INTO rental_category( id, description ) VALUES ( 1, 'ML' ); 
 INSERT INTO rental_category( id, description ) VALUES ( 2, 'VL' ); 
 INSERT INTO rental_category( id, description ) VALUES ( 3, 'TV' ); 
-INSERT INTO users( id, name, member_id ) VALUES ( 1, 'admin', 4 );
+INSERT INTO users( id, name, member_id ) VALUES ( 1, 'james', 4 );
 INSERT INTO access( id, password, user_id) VALUES ( 1, '12345', 1);
 INSERT INTO loyalty ( id, points, user_id) VALUES ( 1, 0, 1);
+INSERT INTO rentals ( id, title, category_id, created) VALUES ( 1, 'Matrix Revolution', 1, 1588856353);
+INSERT INTO rentals ( id, title, category_id, created) VALUES ( 2, 'Matrix', 2, 1588856353);
+INSERT INTO rentals ( id, title, category_id, created) VALUES ( 3, 'Back to the future', 3, 1588856353);
+INSERT INTO rental_status( id, status, user_id, rental_id, created, updated) VALUES ( 1, 1, 1, 2, 1588856353, 1588856353);
+INSERT INTO rental_status( id, status, user_id, rental_id, created, updated) VALUES ( 2, 0, 1, 1, 1588856353, 1588856353);

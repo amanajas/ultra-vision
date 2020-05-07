@@ -6,6 +6,7 @@
 package controllers;
 
 import entities.Rental;
+import entities.RentalStatus;
 import entities.User;
 
 /**
@@ -18,5 +19,5 @@ public interface IWindowController {
     public void createMainWindow(User user); 
     public void showLogin();
     public void showRentStatusForm();
-    public void showRentStatusForm(User user, Rental rental);
+    public void showRentStatusForm(RentalStatus rentalStatus);
 }

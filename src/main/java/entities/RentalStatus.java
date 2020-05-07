@@ -64,6 +64,10 @@ public class RentalStatus {
     public void setStatus(boolean status) {
         this.status = status;
     }
+    
+    public boolean getStatus() {
+        return this.status;
+    }
 
     public Date getCreated() {
         return created;
