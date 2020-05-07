@@ -14,4 +14,5 @@ public interface IRentStatusDAO {
         List<RentalStatus> get(User user) throws SQLException;
         RentalStatus get(User user, Rental rental) throws SQLException;
         boolean hasBooking(int userId, int rentalId) throws SQLException;
+        List<RentalStatus> getAll() throws SQLException; 
 }

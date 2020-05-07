@@ -7,6 +7,7 @@ package controllers;
 
 import db.Database;
 import entities.Rental;
+import entities.RentalStatus;
 import entities.User;
 import java.sql.SQLException;
 import java.util.List;
@@ -34,6 +35,10 @@ public class RentController {
     public Rental getRentByTitle(String title) throws SQLException {
         List<Rental> list = Database.getInstance().getRental().get(title);
         return list.size() > 0 ? list.get(0) : null;
+    }
+    
+    public List<RentalStatus> getAllRents() throws SQLException {
+        return Database.getInstance().getRentStatus().getAll();
     }
     
 }

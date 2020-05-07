@@ -5,6 +5,7 @@
  */
 package gui;
 
+import controllers.RentController;
 import controllers.WindowController;
 import db.Database;
 import entities.Rental;
@@ -22,11 +23,24 @@ public class MainWindow extends Window {
     
     public static final String NAME = "main";
     private User user;
+    private RentController rentController;
 
     public MainWindow(User user) {
         super(NAME);
         initComponents();
         this.user = user;
+        this.rentController = new RentController();
+        refreshList();
+    }
+    
+    public final void refreshList() {
+        try {
+            this.rentStatusTable.setModel(new RentStatusTable(
+                    this.rentController.getAllRents())
+            );
+        } catch (SQLException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -69,6 +83,9 @@ public class MainWindow extends Window {
         setPreferredSize(new java.awt.Dimension(700, 500));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
             }
@@ -76,32 +93,6 @@ public class MainWindow extends Window {
 
         desktopPane.setBackground(java.awt.Color.white);
 
-        rentStatusTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Created", "Title", "Customer", "Updated"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                true, true, true, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
         rentStatusTable.setColumnSelectionAllowed(true);
         rentStatusTable.getTableHeader().setReorderingAllowed(false);
         rentStatusTableScroll.setViewportView(rentStatusTable);
@@ -273,6 +264,10 @@ public class MainWindow extends Window {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_editSelectedRentButtonActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        
+    }//GEN-LAST:event_formWindowActivated
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

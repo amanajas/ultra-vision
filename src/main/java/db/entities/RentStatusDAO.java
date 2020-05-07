@@ -42,27 +42,31 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
         
         private List<RentalStatus> get(String sql, User user, Rental rental) {
             List<Map<String, Object>> result;
-            if (rental != null) {
+            if (user != null && rental != null) {
                 result =  this.db.query(sql, user.getId(), rental.getId());
-            } else {
+            } else if (user != null && rental == null){
                 result =  this.db.query(sql, user.getId());
+            } else {
+                result = this.db.query(sql);
             }
             List<RentalStatus> rents = new ArrayList<>();
-            result.forEach((map) -> {
-                try {
-                    rents.add(new RentalStatus(
-                                (int) map.get("status_id"),
-                                (User) this.user.getByID((int) map.get("user_id")),
-                                (Rental) this.rental.getByID((int) map.get("rental_id")),
-                                (boolean) map.get("status"),
-                                new Date((long) map.get("created")),
-                                new Date((long) map.get("updated"))
-                        )
-                    );
-                } catch (SQLException ex) {
-                    Logger.getLogger(RentStatusDAO.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
+            if (result != null) {
+                result.forEach((map) -> {
+                    try {
+                        rents.add(new RentalStatus(
+                                    (int) map.get("status_id"),
+                                    (User) this.user.getByID((int) map.get("user_id")),
+                                    (Rental) this.rental.getByID((int) map.get("rental_id")),
+                                    (boolean) map.get("status"),
+                                    new Date((long) map.get("created")),
+                                    new Date((long) map.get("updated"))
+                            )
+                        );
+                    } catch (SQLException ex) {
+                        Logger.getLogger(RentStatusDAO.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                });
+            }
             return rents;
         }
 
@@ -101,6 +105,16 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
                 + "WHERE rs.user_id=#1 AND rs.rental_id=#2;";
         List<Map<String, Object>> status = this.db.query(sql, userId, rentalId);
         return ((int) status.get(0).get("count")) > 0;
+    }
+
+    @Override
+    public List<RentalStatus> getAll() throws SQLException {
+        String sql = "SELECT rs.id AS status_id, u.id AS user_id, r.id AS rental_id, r.title AS title, "
+                    + "rs.created AS created, rs.updated AS updated "
+                    + "FROM rental_status AS rs "
+                    + "JOIN rentals AS r ON rs.rental_id=r.id "
+                    + "JOIN users AS u ON u.id=rs.user_id;";
+        return this.get(sql, null, null);
     }
 
 }
