@@ -170,10 +170,9 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public Boolean addCustomerRental(User customer, Rental title, boolean status) {
+	public Boolean addCustomerRental(int userId, int rentalId, boolean status) {
             try {
-                // TODO Auto-generated method stub
-                return this.rentStatus.insertRentStatus(customer, title, status) > 0;
+                return this.rentStatus.insertRentStatus(userId, rentalId, status) > 0;
             } catch (SQLException ex) {
                 Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -181,10 +180,9 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public Boolean addCustomerReturn(int rentalId, User customer, Rental title, boolean status) {
+	public Boolean addCustomerReturn(int rentalStatusId, int userId, int rentalId, boolean status) {
             try {
-                // TODO Auto-generated method stub
-                return this.rentStatus.updateRentStatus(rentalId, customer, title, status);
+                return this.rentStatus.updateRentStatus(rentalStatusId, userId, rentalId, status);
             } catch (SQLException ex) {
                 Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
             }

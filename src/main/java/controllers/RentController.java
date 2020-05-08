@@ -18,16 +18,17 @@ import java.util.List;
  */
 public class RentController {
     
-    public boolean addRentStatus(int rentalStatusId, int userId, int rentalId, boolean status) throws SQLException {
-        if (!Database.getInstance().getRentStatus().hasBooking(userId, rentalId)) {
-            return Database.getInstance().addCustomerRental(
-                    (User) Database.getInstance().getUser().getByID(userId), 
-                    (Rental) Database.getInstance().getRental().getByID(rentalId),
+    public boolean addRentStatus(RentalStatus rentalStatus, int userId, int rentalId, boolean status) throws SQLException {
+        Database database = Database.getInstance();
+        if (rentalStatus == null) {
+            return database.addCustomerRental(
+                    userId, 
+                    rentalId,
                     status);
         } else {
-            return Database.getInstance().addCustomerReturn(rentalStatusId,
-                    (User) Database.getInstance().getUser().getByID(userId), 
-                    (Rental) Database.getInstance().getRental().getByID(rentalId),
+            return database.addCustomerReturn(rentalStatus.getId(),
+                    userId, 
+                    rentalId,
                     status);
         }
     }
@@ -41,9 +42,9 @@ public class RentController {
         return Database.getInstance().getRentStatus().getAll();
     }
 
-    public boolean hasActive(User user, Rental rental) throws SQLException {
-        return Database.getInstance().getRentStatus().hasActiveBooking(user.getId(), 
-                rental.getId());
+    public boolean hasActive(int userId, int rentalId) throws SQLException {
+        return Database.getInstance().getRentStatus().hasActiveBooking(userId, 
+                rentalId);
     }
     
 }

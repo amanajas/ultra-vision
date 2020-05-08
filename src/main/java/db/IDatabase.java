@@ -17,7 +17,7 @@ public interface IDatabase {
 	public Boolean addTitle(Rental title);
 	public List<Rental> searchRental(String title);
 	public Boolean editTitle(Rental title);
-	public Boolean addCustomerRental(User customer, Rental title, boolean status);
-	public Boolean addCustomerReturn(int rentalId, User customer, Rental title, boolean status);
+	public Boolean addCustomerRental(int userId, int rentalId, boolean status);
+	public Boolean addCustomerReturn(int rentalStatusId, int userId, int rentalId, boolean status);
         public void addCardToUser(User user, Card card);
 }

@@ -27,16 +27,16 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
 	}
 
 	@Override
-	public int insertRentStatus(User user, Rental rental, boolean status) throws SQLException {
+	public int insertRentStatus(int userId, int rentalId, boolean status) throws SQLException {
             String sql = "INSERT INTO rental_status(id, created, updated, status, user_id, rental_id) VALUES(null, null, null, #1, #2, #3);";
-            int id = this.db.insert(sql, status ? 1 : 0, user.getId(), rental.getId());
+            int id = this.db.insert(sql, status ? 1 : 0, userId, rentalId);
             return id;
 	}
 
 	@Override
-	public boolean updateRentStatus(int rentalStatusId, User user, Rental rental, boolean status) throws SQLException {
+	public boolean updateRentStatus(int rentalStatusId, int userId, int rentalId, boolean status) throws SQLException {
             String sql = "UPDATE rental_status SET updated=#1, status=#2 WHERE user_id=#3 AND rental_id=#4 AND id=#5;";
-            boolean updated = this.db.update(sql, new Date().getTime(), status ? 1 : 0, user.getId(), rental.getId(), rentalStatusId);
+            boolean updated = this.db.update(sql, new Date().getTime(), status ? 1 : 0, userId, rentalId, rentalStatusId);
             return updated;
 	}
         

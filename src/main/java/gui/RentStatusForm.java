@@ -200,6 +200,7 @@ public class RentStatusForm extends Window {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.rentalStatus = null;
         WindowController.getInstance().showMainWindow();
     }//GEN-LAST:event_formWindowClosed
 
@@ -211,16 +212,16 @@ public class RentStatusForm extends Window {
                 int userId = Integer.valueOf(this.customerIDField.getText());
                 int rentalId = Integer.valueOf(this.rentFieldStatus.getText());
                 String rentalName = this.rentalTitleSearchField.getText();
-                if (this.rentController.addRentStatus(rentalStatus.getId(), userId, rentalId, active)) {
+                if (this.rentController.addRentStatus(this.rentalStatus, userId, rentalId, active)) {
                     JOptionPane.showMessageDialog(this,
                             "Rental updated.",
-                            "Inane ok",
+                            "ok",
                             JOptionPane.WARNING_MESSAGE);
                     WindowController.getInstance().showMainWindow();
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "It was not possible to update the rental status.",
-                            "Inane warning",
+                            "warning",
                             JOptionPane.WARNING_MESSAGE);
                 }
                 

@@ -124,7 +124,7 @@ public class LoginWindow extends Window {
                 if (user == null) {
                     JOptionPane.showMessageDialog(this,
                             "The username or password is incorrect.",
-                            "Inane warning",
+                            "warning",
                             JOptionPane.WARNING_MESSAGE);
                 } else {
                     WindowController.getInstance().createMainWindow(user);
@@ -137,7 +137,7 @@ public class LoginWindow extends Window {
             //custom title, warning icon
             JOptionPane.showMessageDialog(this,
                     "Please fill the fields correctly.",
-                    "Inane warning",
+                    "warning",
                     JOptionPane.WARNING_MESSAGE);
         }
         this.passwordField.setText("");

@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface IRentStatusDAO {
 	
-	int insertRentStatus(User user, Rental rental, boolean status) throws SQLException;
-	boolean updateRentStatus(int rentalStatusId, User user,Rental rental, boolean status) throws SQLException;
+	int insertRentStatus(int userId, int rentalId, boolean status) throws SQLException;
+	boolean updateRentStatus(int rentalStatusId, int userId, int rentalId, boolean status) throws SQLException;
         List<RentalStatus> get(User user) throws SQLException;
         RentalStatus get(User user, Rental rental) throws SQLException;
         boolean hasBooking(int userId, int rentalId) throws SQLException;
