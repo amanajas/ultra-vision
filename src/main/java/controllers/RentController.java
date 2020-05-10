@@ -8,8 +8,8 @@ package controllers;
 import db.Database;
 import entities.Rental;
 import entities.RentalStatus;
-import entities.User;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,8 +34,25 @@ public class RentController {
     }
     
     public Rental getRentByTitle(String title) throws SQLException {
-        List<Rental> list = Database.getInstance().getRental().get(title);
-        return list.size() > 0 ? list.get(0) : null;
+        List<Rental> list = Database.getInstance().getRental().getExactTitle(title);
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
+    }
+    
+    public List<RentalStatus> getRentStatusByDescription(String description) throws SQLException {
+    	List<Rental> rents = Database.getInstance().getRental().getLikeTitle(description);
+    	List<RentalStatus> list;
+    	if (rents.size() > 0) {
+    		list = new ArrayList<RentalStatus>();
+    		rents.forEach((map) -> {
+    			list.add((RentalStatus) Database.getInstance().getRentStatus().getByID(map.getId()));
+            });
+    	} else {
+    		list = Database.getInstance().getRentStatus().getAll();
+    	}
+    	return list;
     }
     
     public List<RentalStatus> getAllRents() throws SQLException {

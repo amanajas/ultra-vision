@@ -8,8 +8,9 @@ import db.dao.IRentStatusDAO;
 import entities.Rental;
 import entities.RentalStatus;
 import entities.User;
+import utils.NumberUtils;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -17,8 +18,8 @@ import java.util.logging.Logger;
 
 public class RentStatusDAO extends DAO implements IRentStatusDAO {
     
-        private UserDAO user;
-        private RentalDAO rental;
+        private final UserDAO user;
+        private final RentalDAO rental;
 
 	public RentStatusDAO(SQLDatabase db) {
 		super(db);
@@ -36,30 +37,34 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
 	@Override
 	public boolean updateRentStatus(int rentalStatusId, int userId, int rentalId, boolean status) throws SQLException {
             String sql = "UPDATE rental_status SET updated=#1, status=#2 WHERE user_id=#3 AND rental_id=#4 AND id=#5;";
-            boolean updated = this.db.update(sql, new Date().getTime(), status ? 1 : 0, userId, rentalId, rentalStatusId);
+            boolean updated = this.db.update(sql, NumberUtils.getDate().getTime(), status ? 1 : 0, userId, rentalId, rentalStatusId);
             return updated;
 	}
         
-        private List<RentalStatus> get(String sql, User user, Rental rental) {
+        private List<RentalStatus> get(String sql, Object... values) {
             List<Map<String, Object>> result;
-            if (user != null && rental != null) {
-                result =  this.db.query(sql, user.getId(), rental.getId());
-            } else if (user != null && rental == null){
-                result =  this.db.query(sql, user.getId());
-            } else {
-                result = this.db.query(sql);
-            }
+            result = this.db.query(sql, values);
             List<RentalStatus> rents = new ArrayList<>();
             if (result != null) {
                 result.forEach((map) -> {
                     try {
+                    	
+                    	/**
+                    	 * status_id, 
+                    	 * user_id, 
+                    	 * rental_id,
+                    	 * created, 
+                    	 * updated, 
+                    	 * status
+                    	 */
+                    	
                         rents.add(new RentalStatus(
                                     (int) map.get("status_id"),
                                     (User) this.user.getByID((int) map.get("user_id")),
                                     (Rental) this.rental.getByID((int) map.get("rental_id")),
-                                    (int) map.get("status") > 0,
-                                    new Date((int) map.get("created")),
-                                    new Date((int) map.get("created")))
+                                    (int) map.get("status") == 1,
+                                    NumberUtils.getDate(map.get("created")),
+                        			NumberUtils.getDate(map.get("updated")))
                             );
                     } catch (SQLException ex) {
                         Logger.getLogger(RentStatusDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,30 +75,38 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
         }
 
 	@Override
-	public List<RentalStatus> get(User user) throws SQLException {
+	public List<RentalStatus> get(int userId) throws SQLException {
             String sql = "SELECT rs.id AS status_id, u.id AS user_id, r.id AS rental_id, r.title AS title, "
                     + "rs.created AS created, rs.updated AS updated, rs.status AS status "
                     + "FROM rental_status AS rs "
                     + "JOIN rentals AS r ON rs.rental_id=r.id "
                     + "JOIN users AS u ON u.id=rs.user_id "
                     + "WHERE rs.user_id=#1;";
-            return this.get(sql, user, null);
+            return this.get(sql, userId);
 	}
 
     @Override
     public Object getByID(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	String sql = "SELECT rs.id AS status_id, u.id AS user_id, r.id AS rental_id, r.title AS title, "
+                + "rs.created AS created, rs.updated AS updated, rs.status AS status "
+                + "FROM rental_status AS rs "
+                + "JOIN rentals AS r ON rs.rental_id=r.id "
+                + "JOIN users AS u ON u.id=rs.user_id "
+                + "WHERE rs.id=#1;";
+    	List<RentalStatus> status = this.get(sql, id);
+    	if (status.size() > 0) return status.get(0);
+    	return null;
     }
 
     @Override
-    public RentalStatus get(User user, Rental rental) throws SQLException {
+    public RentalStatus get(int userId, int rentalId) throws SQLException {
         String sql = "SELECT rs.id AS status_id, u.id AS user_id, r.id AS rental_id, r.title AS title, "
                 + "rs.created AS created, rs.updated AS updated, rs.status AS status "
                 + "FROM rental_status AS rs "
                 + "JOIN rentals AS r ON rs.rental_id=r.id "
                 + "JOIN users AS u ON u.id=rs.user_id "
                 + "WHERE rs.user_id=#1 AND rs.rental_id=#2;";
-        List<RentalStatus> status = this.get(sql, user, rental);
+        List<RentalStatus> status = this.get(sql, userId, rentalId);
         return status.size() > 0 ? status.get(0) : null;
     }
 
@@ -117,12 +130,12 @@ public class RentStatusDAO extends DAO implements IRentStatusDAO {
 
     @Override
     public List<RentalStatus> getAll() throws SQLException {
-        String sql = "SELECT rs.id AS status_id, u.id AS user_id, r.id AS rental_id, r.title AS title, "
+        String sql = "SELECT rs.id AS status_id, u.id AS user_id, r.id AS rental_id, "
                     + "rs.created AS created, rs.updated AS updated, rs.status AS status "
                     + "FROM rental_status AS rs "
                     + "JOIN rentals AS r ON rs.rental_id=r.id "
                     + "JOIN users AS u ON u.id=rs.user_id;";
-        return this.get(sql, null, null);
+        return this.get(sql);
     }
 
 }

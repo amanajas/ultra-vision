@@ -15,6 +15,14 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.GroupLayout;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -41,6 +49,10 @@ public class MainWindow extends Window {
         } catch (SQLException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public final void refreshList(List<RentalStatus> list) {
+        this.rentStatusTable.setModel(new RentStatusTable(list));
     }
 
     /**
@@ -79,8 +91,7 @@ public class MainWindow extends Window {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ultra-Vision");
         setAlwaysOnTop(true);
-        setName("frameWindow"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(900, 500));
+        setName("frameWindow");
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -123,37 +134,57 @@ public class MainWindow extends Window {
         desktopPane.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktopPane.setLayer(editSelectedRentButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktopPane.setLayer(addRentButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        
+        searchRentStatusButton = new JButton();
+        searchRentStatusButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		String searhRentText = searchRentStatusField.getText();
+        		try {
+					List<RentalStatus> list = rentController.getRentStatusByDescription(searhRentText);
+					refreshList(list);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+        	}
+        });
+        searchRentStatusButton.setText("Search");
 
         javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
-        desktopPane.setLayout(desktopPaneLayout);
         desktopPaneLayout.setHorizontalGroup(
-            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(rentStatusTableScroll)
-            .addGroup(desktopPaneLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(desktopPaneLayout.createSequentialGroup()
-                        .addComponent(searchRentStatusField, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editSelectedRentButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addRentButton))
-                    .addComponent(jLabel1))
-                .addContainerGap(90, Short.MAX_VALUE))
+        	desktopPaneLayout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(desktopPaneLayout.createSequentialGroup()
+        			.addGroup(desktopPaneLayout.createParallelGroup(Alignment.LEADING, false)
+        				.addComponent(rentStatusTableScroll, GroupLayout.PREFERRED_SIZE, 900, GroupLayout.PREFERRED_SIZE)
+        				.addGroup(desktopPaneLayout.createSequentialGroup()
+        					.addGap(12)
+        					.addGroup(desktopPaneLayout.createParallelGroup(Alignment.LEADING)
+        						.addGroup(desktopPaneLayout.createSequentialGroup()
+        							.addComponent(searchRentStatusField, GroupLayout.PREFERRED_SIZE, 455, GroupLayout.PREFERRED_SIZE)
+        							.addPreferredGap(ComponentPlacement.RELATED)
+        							.addComponent(searchRentStatusButton)
+        							.addGap(82)
+        							.addComponent(editSelectedRentButton)
+        							.addPreferredGap(ComponentPlacement.RELATED, 1, Short.MAX_VALUE)
+        							.addComponent(addRentButton))
+        						.addComponent(jLabel1))))
+        			.addContainerGap(114, Short.MAX_VALUE))
         );
         desktopPaneLayout.setVerticalGroup(
-            desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(desktopPaneLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(searchRentStatusField, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editSelectedRentButton)
-                    .addComponent(addRentButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rentStatusTableScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE))
+        	desktopPaneLayout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(desktopPaneLayout.createSequentialGroup()
+        			.addGap(22)
+        			.addComponent(jLabel1)
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addGroup(desktopPaneLayout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(searchRentStatusField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(editSelectedRentButton)
+        				.addComponent(addRentButton)
+        				.addComponent(searchRentStatusButton))
+        			.addPreferredGap(ComponentPlacement.RELATED)
+        			.addComponent(rentStatusTableScroll, GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE))
         );
+        desktopPane.setLayout(desktopPaneLayout);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -295,6 +326,7 @@ public class MainWindow extends Window {
     private javax.swing.JMenuItem searchRentalMenuItem;
     private javax.swing.JMenuItem updateCustomerMenuItem;
     private javax.swing.JMenuItem updateRentalMenuItem;
+    private JButton searchRentStatusButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -306,5 +338,4 @@ public class MainWindow extends Window {
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }

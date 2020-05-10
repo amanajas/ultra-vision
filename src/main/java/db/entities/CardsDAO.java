@@ -29,9 +29,9 @@ public class CardsDAO extends DAO implements ICardsDAO {
 	}
 
 	@Override
-	public void deleteCard(Card card) throws SQLException {
+	public void deleteCard(int cardId) throws SQLException {
             String sql = "DELETE FROM cards WERE id=#1;";
-            this.db.update(sql, card.getUser());
+            this.db.update(sql, cardId);
 	}
 
 	@Override

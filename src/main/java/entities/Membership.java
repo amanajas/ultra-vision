@@ -6,9 +6,9 @@ public abstract class Membership {
 		ML, VL, TV, PR
 	}
 	
-	private int id;
-	private Type type;
-	private String description;
+	private final int id;
+	private final Type type;
+	private final String description;
 	
 	public Membership(int id, String description, Type type) {
 		this.id = id;

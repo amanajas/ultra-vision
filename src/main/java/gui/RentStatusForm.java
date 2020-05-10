@@ -12,7 +12,6 @@ import entities.Rental;
 import entities.RentalStatus;
 import entities.User;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -25,9 +24,11 @@ import utils.keyboard.adapter.OnlyNumber;
  */
 public class RentStatusForm extends Window {
     
-    public static final String NAME = "rentStatus";
-    private List<User> users;
-    private List<Rental> rentals;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3341956859165788317L;
+	public static final String NAME = "rentStatus";
     private final RentController rentController;
     private final UserController userController;
     private RentalStatus rentalStatus;
@@ -211,7 +212,6 @@ public class RentStatusForm extends Window {
             try {
                 int userId = Integer.valueOf(this.customerIDField.getText());
                 int rentalId = Integer.valueOf(this.rentFieldStatus.getText());
-                String rentalName = this.rentalTitleSearchField.getText();
                 if (this.rentController.addRentStatus(this.rentalStatus, userId, rentalId, active)) {
                     JOptionPane.showMessageDialog(this,
                             "Rental updated.",
@@ -233,7 +233,6 @@ public class RentStatusForm extends Window {
 
     private void searchCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchCustomerButtonActionPerformed
         String id = this.customerIDField.getText();
-        String name = this.customerNameField.getText();
         if (!id.isEmpty() && NumberUtils.isNumeric(id)) {
             try {
                 User user = this.userController.getUser(Integer.valueOf(id));
@@ -243,22 +242,7 @@ public class RentStatusForm extends Window {
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "It was not possible to find the customer by ID.",
-                            "Inane warning",
-                            JOptionPane.WARNING_MESSAGE);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else if (!name.isEmpty()) {
-            try {
-                User user = this.userController.getUserByName(name);
-                if (user != null) {
-                    this.customerIDField.setText(String.valueOf(user.getId()));
-                    this.customerNameField.setText(user.getName());
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            "It was not possible to find the customer by name.",
-                            "Inane warning",
+                            "warning",
                             JOptionPane.WARNING_MESSAGE);
                 }
             } catch (SQLException ex) {
@@ -267,7 +251,7 @@ public class RentStatusForm extends Window {
         } else {
             JOptionPane.showMessageDialog(this,
                             "You need to fill in the customer data.",
-                            "Inane warning",
+                            "warning",
                             JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_searchCustomerButtonActionPerformed
@@ -287,7 +271,7 @@ public class RentStatusForm extends Window {
                     this.rentFieldStatus.setText("ID not found");
                     JOptionPane.showMessageDialog(this,
                             "It was not possible to find the rental by title.",
-                            "Inane warning",
+                            "warning",
                             JOptionPane.WARNING_MESSAGE);
                 }
             } catch (SQLException ex) {
@@ -312,9 +296,12 @@ public class RentStatusForm extends Window {
         this.customerIDField.setText("");
         this.customerNameField.setText("");
         this.rentalTitleSearchField.setText("");
+        this.rentFieldStatus.setText("");
+        this.customerIDField.setEnabled(true);
         this.updateStatusButton.setSelected(true);
-        this.customerNameField.setEnabled(true);
+        this.customerNameField.setEnabled(false);
         this.rentalTitleSearchField.setEnabled(true);
+        this.searchRentalButton.setEnabled(true);
         this.rentalStatus = null;
     }
 
@@ -323,10 +310,12 @@ public class RentStatusForm extends Window {
         this.customerIDField.setText(String.valueOf(rentalStatus.getUser().getId()));
         this.customerNameField.setText(String.valueOf(rentalStatus.getUser().getName()));
         this.rentalTitleSearchField.setText(rentalStatus.getRental().getTitle());
+        this.customerIDField.setEnabled(false);
         this.customerNameField.setEnabled(false);
         this.rentalTitleSearchField.setEnabled(false);
         this.updateStatusButton.setSelected(rentalStatus.getStatus());
-        this.searchRentalButtonActionPerformed(null);
+        this.rentFieldStatus.setText(String.valueOf(this.rentalStatus.getId()));
+        this.searchRentalButton.setEnabled(false);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

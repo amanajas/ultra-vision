@@ -57,7 +57,7 @@ public class RentStatusTable extends AbstractTableModel{
         if (rowIndex > -1) {
             switch (columnIndex) {
                 case 0:
-                    value = status.getStatus();
+                    value = status.getStatus() ? "Active" : "Returned";
                     break;
                 case 1:
                     value = status.getUser().getName();
@@ -82,7 +82,7 @@ public class RentStatusTable extends AbstractTableModel{
     public Class<?> getColumnClass(int columnIndex) {
        switch (columnIndex) {
             case 0:
-                return Boolean.class;
+                return String.class;
             case 1:
                 return String.class;
             case 2:

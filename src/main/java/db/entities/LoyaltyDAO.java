@@ -19,15 +19,15 @@ public class LoyaltyDAO extends DAO implements ILoyaltyDAO {
 
 	@Override
 	public boolean updateLoyalty(User user) throws SQLException {
-            String sql = "UPDATE loyalty SET points=#1 WHERE user_id=#2;";
+            String sql = "UPDATE loyalty SET points=#1 WHERE id=#2;";
             return this.db.update(sql, user.getLoyalty().getPoints(), user.getId());
 	}
 
 	@Override
-	public LoyaltyPoints get(int user) throws SQLException {
+	public LoyaltyPoints get(int userId) throws SQLException {
 		List<Map<String, Object>> result = this.db.query("SELECT id, "
 				+ "points FROM loyalty "
-				+ "WHERE user_id = " + user + ";");
+				+ "WHERE user_id = " + userId + ";");
 		
                 LoyaltyPoints loyalty = null;
                 for(Map<String, Object> map : result){

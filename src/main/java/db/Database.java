@@ -126,10 +126,10 @@ public class Database implements IDatabase {
 	}
 
 	@Override
-	public Boolean deleteCustomer(User custumer) {
+	public Boolean deleteCustomer(User user) {
             try {
                 // TODO Auto-generated method stub
-                return this.user.deleteUser(custumer);
+                return this.user.deleteUser(user.getId());
             } catch (SQLException ex) {
                 Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -150,8 +150,7 @@ public class Database implements IDatabase {
 	@Override
 	public List<Rental> searchRental(String title) {
             try {
-                // TODO Auto-generated method stub
-                return this.rental.get(title);
+                return this.rental.getLikeTitle(title);
             } catch (SQLException ex) {
                 Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
             }

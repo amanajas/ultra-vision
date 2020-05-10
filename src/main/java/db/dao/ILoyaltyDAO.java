@@ -9,5 +9,5 @@ public interface ILoyaltyDAO {
 	
         int insertLoyalty(User user) throws SQLException;
 	boolean updateLoyalty(User user) throws SQLException;
-	LoyaltyPoints get(int user) throws SQLException;
+	LoyaltyPoints get(int userId) throws SQLException;
 }

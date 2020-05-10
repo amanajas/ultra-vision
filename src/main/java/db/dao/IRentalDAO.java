@@ -9,6 +9,7 @@ public interface IRentalDAO {
 	
 	int insertRental(Rental rental) throws SQLException;
 	boolean updateRental(Rental rental) throws SQLException;
-	List<Rental> get(String title) throws SQLException;
+	List<Rental> getLikeTitle(String title) throws SQLException;
+	List<Rental> getExactTitle(String title) throws SQLException;
         List<Rental> getAll() throws SQLException;
 }

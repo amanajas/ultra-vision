@@ -17,6 +17,21 @@ public class RentalDAO extends DAO implements IRentalDAO {
 		super(db);
 		// TODO Auto-generated constructor stub
 	}
+        
+        private List<Rental> get(String sql, Object... values) {
+            List<Map<String, Object>> result;
+            result = this.db.query(sql, values);
+            List<Rental> rentals = new ArrayList<>();
+            result.forEach((map) -> {
+                rentals.add(new Rental(
+                        (int) map.get("id"),
+                        (String) map.get("title"),
+                        Rental.Category.valueOf(String.valueOf(map.get("description"))),
+                        new Date(((Integer) map.get("created")).longValue()))
+                );
+            });
+            return rentals;
+        }
 
 	@Override
 	public int insertRental(Rental rental) throws SQLException {
@@ -46,63 +61,46 @@ public class RentalDAO extends DAO implements IRentalDAO {
 	}
 
 	@Override
-	public List<Rental> get(String title) throws SQLException {
-            List<Map<String, Object>> result = this.db.query("SELECT r.id AS id, rc.description AS description, "
+	public List<Rental> getLikeTitle(String title) throws SQLException {
+            String sql = "SELECT r.id AS id, rc.description AS description, "
                         + "r.created AS created, r.title AS title "
                         + "FROM rentals AS r "
                         + "JOIN rental_category AS rc ON rc.id=r.category_id "
-			+ "WHERE r.title LIKE '%" + title + "%';");
+			+ "WHERE r.title LIKE '#1%';";
 
-            List<Rental> rentals = new ArrayList<>();
-            result.forEach((map) -> {
-                rentals.add(new Rental(
-                        (int) map.get("id"),
-                        (String) map.get("title"),
-                        Rental.Category.valueOf(String.valueOf(map.get("description"))),
-                        new Date(((Integer) map.get("created")).longValue()))
-                );
-            });
-            return rentals;
+            return this.get(sql, title);
+	}
+        
+        @Override
+	public List<Rental> getExactTitle(String title) throws SQLException {
+            String sql = "SELECT r.id AS id, rc.description AS description, "
+                        + "r.created AS created, r.title AS title "
+                        + "FROM rentals AS r "
+                        + "JOIN rental_category AS rc ON rc.id=r.category_id "
+			+ "WHERE r.title='#1';";
+
+            return this.get(sql, title);
 	}
 
         @Override
         public List<Rental> getAll() throws SQLException {
-            List<Map<String, Object>> result = this.db.query("SELECT r.id AS id, rc.description AS description, "
+            String sql = "SELECT r.id AS id, rc.description AS description, "
                         + "r.created AS created, r.title AS title "
                         + "FROM rentals AS r "
-                        + "JOIN rental_category AS rc ON rc.id=r.category_id;");
+                        + "JOIN rental_category AS rc ON rc.id=r.category_id;";
 
-            List<Rental> rentals = new ArrayList<>();
-            result.forEach((map) -> {
-                rentals.add(new Rental(
-                        (int) map.get("id"),
-                        (String) map.get("title"),
-                        Rental.Category.valueOf(String.valueOf(map.get("description"))),
-                        new Date(((Integer) map.get("created")).longValue()))
-                );
-            });
-            return rentals;
+            return this.get(sql);
         }
 
         @Override
         public Object getByID(int id)  throws SQLException {
-            List<Map<String, Object>> result = this.db.query("SELECT r.id AS id, rc.description AS description, "
+            String sql = "SELECT r.id AS id, rc.description AS description, "
                         + "r.created AS created, r.title AS title "
                         + "FROM rentals AS r "
                         + "JOIN rental_category AS rc ON rc.id=r.category_id "
-                    + "WHERE r.id=#1;", id);
+                    + "WHERE r.id=#1;";
 
-            List<Rental> rentals = new ArrayList<>();
-            result.forEach((Map<String, Object> map) -> {
-                rentals.add(new Rental(
-                        (int) map.get("id"),
-                        (String) map.get("title"),
-                        Rental.Category.valueOf(String.valueOf(map.get("description"))),
-                        new Date(((Integer) map.get("created")).longValue())
-                    )
-                );
-            });
-            return rentals.size() > 0 ? rentals.get(0) : null;
+            return this.get(sql, id).get(0);
         }
 
 }

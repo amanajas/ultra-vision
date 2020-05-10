@@ -8,6 +8,6 @@ import entities.Card;
 public interface ICardsDAO {
 	
 	int insertCard(Card card) throws SQLException;
-	void deleteCard(Card card) throws SQLException;
-	List<Card> get(int user) throws SQLException;
+	void deleteCard(int cardId) throws SQLException;
+	List<Card> get(int userId) throws SQLException;
 }

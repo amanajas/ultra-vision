@@ -39,14 +39,14 @@ public class UserDAO extends DAO implements IUserDAO {
 	}
 
 	@Override
-	public boolean deleteUser(User user) throws SQLException {
+	public boolean deleteUser(int userId) throws SQLException {
             String sql1 = "DELETE FROM loyalty WERE user_id=#1;";
             String sql2 = "DELETE FROM access WERE user_id=#1;";
             String sql3 = "DELETE FROM users WERE id=#1;";
             return (
-                    this.db.update(sql1, user.getId()) &&
-                    this.db.update(sql2, user.getId()) &&
-                    this.db.update(sql3, user.getId())
+                    this.db.update(sql1, userId) &&
+                    this.db.update(sql2, userId) &&
+                    this.db.update(sql3, userId)
                   );
 	}
 

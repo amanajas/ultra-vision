@@ -6,5 +6,5 @@ import entities.Membership;
 
 public interface IMembership {
 	
-	Membership get(int user) throws SQLException;
+	Membership get(int membership_id) throws SQLException;
 }
