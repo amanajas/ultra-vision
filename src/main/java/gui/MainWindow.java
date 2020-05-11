@@ -7,8 +7,6 @@ package gui;
 
 import controllers.RentController;
 import controllers.WindowController;
-import db.Database;
-import entities.Rental;
 import entities.RentalStatus;
 import entities.User;
 import java.sql.SQLException;
@@ -21,9 +19,6 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 /**
  *
  * @author thiago.amanajas
@@ -31,8 +26,8 @@ import java.awt.event.MouseEvent;
 public class MainWindow extends Window {
     
     public static final String NAME = "main";
-    private User user;
-    private RentController rentController;
+    private final User user;
+    private final RentController rentController;
 
     public MainWindow(User user) {
         super(NAME);
