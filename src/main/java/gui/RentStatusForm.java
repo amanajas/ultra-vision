@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import utils.NumberUtils;
+import utils.keyboard.adapter.EnterKeyListener;
 import utils.keyboard.adapter.OnlyNumber;
 
 /**
@@ -43,6 +44,8 @@ public class RentStatusForm extends Window {
         this.rentController = new RentController();
         this.userController = new UserController();
         this.customerIDField.addKeyListener(new OnlyNumber(this.customerIDField));
+        this.customerIDField.addKeyListener(new EnterKeyListener(customerIDField, customerNameField, userController));
+        this.rentalTitleSearchField.addKeyListener(new EnterKeyListener(rentalTitleSearchField, rentFieldStatus, rentController));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,7 +210,8 @@ public class RentStatusForm extends Window {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         if (NumberUtils.isNumeric(this.customerIDField.getText()) &&
-                NumberUtils.isNumeric(this.rentFieldStatus.getText())) {
+                NumberUtils.isNumeric(this.rentFieldStatus.getText()) && 
+                this.customerNameField.getText().length() > 0) {
             boolean active = this.updateStatusButton.isSelected();
             try {
                 int userId = Integer.valueOf(this.customerIDField.getText());
@@ -314,7 +318,7 @@ public class RentStatusForm extends Window {
         this.customerNameField.setEnabled(false);
         this.rentalTitleSearchField.setEnabled(false);
         this.updateStatusButton.setSelected(rentalStatus.getStatus());
-        this.rentFieldStatus.setText(String.valueOf(this.rentalStatus.getId()));
+        this.rentFieldStatus.setText(String.valueOf(this.rentalStatus.getRental().getId()));
         this.searchRentalButton.setEnabled(false);
     }
 

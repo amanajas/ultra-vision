@@ -6,8 +6,9 @@ import db.SQLDatabase;
 import db.dao.DAO;
 import db.dao.IRentalDAO;
 import entities.Rental;
+import utils.NumberUtils;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class RentalDAO extends DAO implements IRentalDAO {
                         (int) map.get("id"),
                         (String) map.get("title"),
                         Rental.Category.valueOf(String.valueOf(map.get("description"))),
-                        new Date(((Integer) map.get("created")).longValue()))
+                        NumberUtils.getDate(map.get("created")))
                 );
             });
             return rentals;

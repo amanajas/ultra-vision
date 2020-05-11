@@ -13,8 +13,9 @@ import java.util.Date;
  */
 public class NumberUtils {
     
-    public static boolean isNumeric(String str) { 
-        try {  
+    public static boolean isNumeric(String str) {
+    	if (str == null) return false;
+        try { 
           Double.parseDouble(str);  
           return true;
         } catch(NumberFormatException e){  

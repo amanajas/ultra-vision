@@ -8,6 +8,8 @@ package controllers;
 import db.Database;
 import entities.Rental;
 import entities.RentalStatus;
+import utils.NumberUtils;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
  *
  * @author thiago.amanajas
  */
-public class RentController {
+public class RentController implements IController{
     
     public boolean addRentStatus(RentalStatus rentalStatus, int userId, int rentalId, boolean status) throws SQLException {
         Database database = Database.getInstance();
@@ -44,7 +46,7 @@ public class RentController {
     public List<RentalStatus> getRentStatusByDescription(String description) throws SQLException {
     	List<Rental> rents = Database.getInstance().getRental().getLikeTitle(description);
     	List<RentalStatus> list;
-    	if (rents.size() > 0) {
+    	if (description.length() > 0 && rents.size() > 0) {
     		list = new ArrayList<RentalStatus>();
     		rents.forEach((map) -> {
     			list.add((RentalStatus) Database.getInstance().getRentStatus().getByID(map.getId()));
@@ -63,5 +65,16 @@ public class RentController {
         return Database.getInstance().getRentStatus().hasActiveBooking(userId, 
                 rentalId);
     }
+
+	@Override
+	public String getEnterValue(String basedValue) throws SQLException {
+		if (basedValue.length() > 0) {
+			Rental rental = this.getRentByTitle(basedValue);
+			if (rental != null) {
+				return String.valueOf(rental.getId());
+			}
+		}
+		return "";
+	}
     
 }

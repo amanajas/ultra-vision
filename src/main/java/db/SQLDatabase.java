@@ -96,10 +96,12 @@ public class SQLDatabase {
 	}
         
         public int insert(String sql, Object... values) {
+        	System.out.println(sql.trim());
             return (int) this.query(sql, true, values).get(0).get("last_insert_rowid()");
         }
         
         public boolean update(String sql, Object... values) {
+        	System.out.println(sql.trim());
             return (int) this.query(sql, true, values).get(0).get("last_insert_rowid()") == 0;
         }
 	
@@ -118,7 +120,6 @@ public class SQLDatabase {
             try {
                 ResultSet response;
                 conn = new SQLiteConnection(this.dir, this.path);
-                System.out.println(sql.trim());
                 PreparedStatement stmt = conn.prepareStatement(sql.trim(),
                         Statement.RETURN_GENERATED_KEYS);
                 if (insertUpdate) {

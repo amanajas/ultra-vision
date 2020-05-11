@@ -15,7 +15,11 @@ import javax.swing.table.AbstractTableModel;
  * @author thiago.amanajas
  */
 public class RentStatusTable extends AbstractTableModel{
-    private final List<RentalStatus> rentStatus;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7098972841472127059L;
+	private final List<RentalStatus> rentStatus;
 
     public RentStatusTable(List<RentalStatus> rentStatus) {
         super();
@@ -57,19 +61,19 @@ public class RentStatusTable extends AbstractTableModel{
         if (rowIndex > -1) {
             switch (columnIndex) {
                 case 0:
-                    value = status.getStatus() ? "Active" : "Returned";
+                    value = status != null ? (status.getStatus() ? "Active" : "Returned") : " -- ";
                     break;
                 case 1:
-                    value = status.getUser().getName();
+                    value = status != null ? status.getUser().getName() : " -- ";
                     break;
                 case 2:
-                    value = status.getRental().getTitle();
+                    value = status != null ? status.getRental().getTitle() : " -- ";
                     break;
                 case 3:
-                    value = status.getCreated().toString();
+                    value = status != null ? status.getCreated().toString() : " -- ";
                     break;
                 case 4:
-                    value = status.getUpdated().toString();
+                    value = status != null ? status.getUpdated().toString() : " -- ";
                     break;
             }
         }
