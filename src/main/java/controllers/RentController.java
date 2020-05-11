@@ -6,9 +6,9 @@
 package controllers;
 
 import db.Database;
+import entities.Membership;
 import entities.Rental;
 import entities.RentalStatus;
-import utils.NumberUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,8 +57,29 @@ public class RentController implements IController{
     	return list;
     }
     
+    private List<RentalStatus> checkPermissionList(List<RentalStatus> list, List<RentalStatus> perm, Membership membership) {
+    	String access = membership.getRules().getAccessString();
+    	list.forEach((map) -> {
+    		String cat = map.getRental().getCategory().toString();
+    		if (access.contains(cat)) {
+    			perm.add(map);
+    		}
+    	});
+    	return perm;
+    }
+    
+    public List<RentalStatus> getRentStatusByDescription(String description, Membership membership) throws SQLException {
+    	List<RentalStatus> list = this.getRentStatusByDescription(description);
+    	return checkPermissionList(list, new ArrayList<RentalStatus>(), membership);
+    }
+    
     public List<RentalStatus> getAllRents() throws SQLException {
-        return Database.getInstance().getRentStatus().getAll();
+    	return Database.getInstance().getRentStatus().getAll();
+    }
+    
+    public List<RentalStatus> getAllRents(Membership membership) throws SQLException {
+    	List<RentalStatus> list = Database.getInstance().getRentStatus().getAll();
+    	return  checkPermissionList(list, new ArrayList<RentalStatus>(), membership);
     }
 
     public boolean hasActive(int userId, int rentalId) throws SQLException {

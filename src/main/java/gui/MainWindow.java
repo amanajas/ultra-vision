@@ -45,7 +45,7 @@ public class MainWindow extends Window {
     public final void refreshList() {
         try {
             this.rentStatusTable.setModel(new RentStatusTable(
-                    this.rentController.getAllRents()));
+                    this.rentController.getAllRents(this.user.getMembership())));
         } catch (SQLException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -140,7 +140,7 @@ public class MainWindow extends Window {
         	public void actionPerformed(ActionEvent e) {
         		String searhRentText = searchRentStatusField.getText();
         		try {
-					List<RentalStatus> list = rentController.getRentStatusByDescription(searhRentText);
+					List<RentalStatus> list = rentController.getRentStatusByDescription(searhRentText, user.getMembership());
 					refreshList(list);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
