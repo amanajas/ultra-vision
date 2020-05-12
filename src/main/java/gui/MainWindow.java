@@ -7,6 +7,8 @@ package gui;
 
 import controllers.RentController;
 import controllers.WindowController;
+import entities.Card;
+import entities.LoyaltyPoints;
 import entities.RentalStatus;
 import entities.User;
 import java.sql.SQLException;
@@ -19,6 +21,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import memberships.Premium;
 /**
  *
  * @author thiago.amanajas
@@ -28,6 +32,15 @@ public class MainWindow extends Window {
     public static final String NAME = "main";
     private final User user;
     private final RentController rentController;
+    
+    public MainWindow() {
+        this(new User(
+                -1, 
+                "admin", 
+                new LoyaltyPoints(), 
+                new Premium(4, "Premium"), 
+                new ArrayList<Card>()));
+    }
 
     public MainWindow(User user) {
         super(NAME);

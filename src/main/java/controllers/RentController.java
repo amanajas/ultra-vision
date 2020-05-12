@@ -70,7 +70,7 @@ public class RentController implements IController{
     
     public List<RentalStatus> getRentStatusByDescription(String description, Membership membership) throws SQLException {
     	List<RentalStatus> list = this.getRentStatusByDescription(description);
-    	return checkPermissionList(list, new ArrayList<RentalStatus>(), membership);
+    	return checkPermissionList(list, new ArrayList<>(), membership);
     }
     
     public List<RentalStatus> getAllRents() throws SQLException {
@@ -79,7 +79,7 @@ public class RentController implements IController{
     
     public List<RentalStatus> getAllRents(Membership membership) throws SQLException {
     	List<RentalStatus> list = Database.getInstance().getRentStatus().getAll();
-    	return  checkPermissionList(list, new ArrayList<RentalStatus>(), membership);
+    	return  checkPermissionList(list, new ArrayList<>(), membership);
     }
 
     public boolean hasActive(int userId, int rentalId) throws SQLException {

@@ -28,14 +28,14 @@ public class UserController implements IController {
     }
 
 	@Override
-	public String getEnterValue(String basedValue) throws SQLException {
-		if (NumberUtils.isNumeric(basedValue)) {
-			int id = Integer.valueOf(basedValue);
-			User user = this.getUser(id);
-			if (user != null) {
-				return user.getName();
-			}
-		}
-		return "";
-	}
+    public String getEnterValue(String basedValue) throws SQLException {
+            if (NumberUtils.isNumeric(basedValue)) {
+                    int id = Integer.valueOf(basedValue);
+                    User user = this.getUser(id);
+                    if (user != null) {
+                            return user.getName();
+                    }
+            }
+            return "";
+    }
 }

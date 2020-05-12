@@ -61,6 +61,10 @@ public class Database implements IDatabase {
             private static final Database INSTANCE = new Database();
         }
         
+        public MembershipDAO getMembership() {
+            return membership;
+        }
+        
         public CardsDAO getCards() {
 		return cards;
 	}

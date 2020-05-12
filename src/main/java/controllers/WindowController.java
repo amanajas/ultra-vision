@@ -5,7 +5,6 @@
  */
 package controllers;
 
-import entities.Rental;
 import entities.RentalStatus;
 import entities.User;
 import gui.LoginWindow;
