@@ -2,20 +2,16 @@ package entities;
 
 import java.util.Date;
 
-public class Rental {
-	
-	public enum Category {
-		ML, VL, TV
-	}
+public class Rental implements IEntity {
 	
 	private int id;
 	private String title;
 	private Category category;
 	private Date created;
         
-        public Rental(String title, Category category) {
-            this(-1, title, category);
-        }
+    public Rental(String title, Category category) {
+        this(-1, title, category);
+    }
 	
 	public Rental(int id, String title, Category category) {
 		this(id, title, category, new Date());
@@ -58,6 +54,11 @@ public class Rental {
 	
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	@Override
+	public String getDescription() {
+		return this.title;
 	}
 
 

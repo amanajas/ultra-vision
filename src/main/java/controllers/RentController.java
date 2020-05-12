@@ -6,6 +6,7 @@
 package controllers;
 
 import db.Database;
+import entities.Category;
 import entities.Membership;
 import entities.Rental;
 import entities.RentalStatus;
@@ -96,6 +97,39 @@ public class RentController implements IController{
 			}
 		}
 		return "";
+	}
+
+	public List<Category> getCategories() {
+		return Database.getInstance().getRental().getCategories();
+	}
+
+	public Category getCategory(String description) {
+		return Database.getInstance().getRental().getCategory(description);
+	}
+
+	public boolean addRent(String title, Category category) {
+		if (title.length() == 0 || category == null) return false;
+		try {
+			return Database.getInstance().getRental().insertRental(
+					new Rental(title, category)) > 0;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean updateRent(Rental rental, String title, Category category) {
+		if (title.length() == 0 || category == null) return false;
+		try {
+			rental.setTitle(title);
+			rental.setCategory(category);
+			return Database.getInstance().getRental().updateRental(rental);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
     
 }

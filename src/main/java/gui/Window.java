@@ -10,7 +10,11 @@ package gui;
  * @author thiago.amanajas
  */
 public abstract class Window extends javax.swing.JFrame {
-    private final String name;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7024549095611494356L;
+	private final String name;
     /**
      * Creates new form NewApplication
      * @param name

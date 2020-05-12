@@ -23,8 +23,6 @@ public class OnlyNumber extends KeyAdapter {
     
     @Override
     public void keyPressed(KeyEvent ke) {
-        String value = field.getText();
-        int l = value.length();
         if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9' || 
                 KeyEvent.VK_BACK_SPACE == ke.getKeyCode()) {
            field.setEditable(true);

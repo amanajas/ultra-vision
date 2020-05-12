@@ -1,6 +1,6 @@
 package entities;
 
-public class LoyaltyPoints {
+public class LoyaltyPoints implements IEntity{
 	
 	private int id;
 	private Integer points;
@@ -33,5 +33,10 @@ public class LoyaltyPoints {
     public void setId(int id) {
         this.id = id;
     }
+
+	@Override
+	public String getDescription() {
+		return this.id + "-" + this.points;
+	}
 
 }

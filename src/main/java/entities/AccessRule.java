@@ -1,6 +1,6 @@
 package entities;
 
-public class AccessRule {
+public class AccessRule implements IEntity{
 	
 	private String description;
 	private Membership.Type[] accessTo;
@@ -10,6 +10,7 @@ public class AccessRule {
 		this.accessTo = accessTo;
 	}
 	
+	@Override
 	public String getDescription() {
 		return this.description;
 	}

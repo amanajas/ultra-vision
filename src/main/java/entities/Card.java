@@ -2,7 +2,7 @@ package entities;
 
 import java.util.Date;
 
-public class Card {
+public class Card implements IEntity{
 
     public static int POINTS = 10;
 
@@ -54,4 +54,9 @@ public class Card {
         public void setId(int id) {
             this.id = id;
         }
+
+		@Override
+		public String getDescription() {
+			return this.number;
+		}
 }

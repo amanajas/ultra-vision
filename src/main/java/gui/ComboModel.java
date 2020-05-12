@@ -6,7 +6,8 @@
 package gui;
 
 import javax.swing.DefaultComboBoxModel;
-import entities.Membership;
+
+import entities.IEntity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,20 +15,20 @@ import java.util.List;
  *
  * @author thiago.amanajas
  */
-public class MemberComboModel extends DefaultComboBoxModel<String> {
+public class ComboModel extends DefaultComboBoxModel<String> {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = -601556777576051880L;
-	private List<Membership> list;
+	private List<IEntity> list;
     
-    public MemberComboModel() {
+    public ComboModel() {
     	super();
         this.list = new ArrayList<>();
     }
     
-    public void setOptionList(List<Membership> list) {
+    public void setOptionList(List<IEntity> list) {
         this.list = list;
     }
 

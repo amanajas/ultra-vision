@@ -10,6 +10,7 @@ import entities.User;
 import gui.LoginWindow;
 import gui.MainWindow;
 import gui.RentStatusForm;
+import gui.RentalForm;
 import gui.UserForm;
 import gui.Window;
 import java.util.HashMap;
@@ -103,7 +104,13 @@ public class WindowController implements IWindowController {
 	}
 
 	public void showRentalForm() {
-		// TODO Auto-generated method stub
+		RentalForm rentalForm = (RentalForm) this.windows.get(RentalForm.NAME);
+        if (rentalForm == null) {
+        	rentalForm = new RentalForm();
+            this.addWindow(rentalForm);
+        }
+        rentalForm.clear();
+        this.showWindow(RentalForm.NAME, true);
 		
 	}
 

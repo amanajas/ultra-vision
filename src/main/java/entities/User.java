@@ -10,7 +10,7 @@ import java.util.List;
  * @author thiago.amanajas
  *
  */
-public class User {
+public class User implements IEntity{
 	
 	private int id;
 	private String name;
@@ -76,5 +76,10 @@ public class User {
 
 	public void setName(String name) {
 		this.name = name;		
+	}
+
+	@Override
+	public String getDescription() {
+		return this.name;
 	}
 }

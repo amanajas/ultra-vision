@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author thiago.amanajas
  */
-public class RentalStatus {
+public class RentalStatus implements IEntity {
     
     private int id;
     private User user;
@@ -83,5 +83,10 @@ public class RentalStatus {
 
     public void setUpdated(Date updated) {
         this.updated = updated;
-    }    
+    }
+
+	@Override
+	public String getDescription() {
+		return this.getStatus() + "-" + this.rental.getTitle();
+	}    
 }

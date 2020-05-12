@@ -1,6 +1,6 @@
 package entities;
 
-public abstract class Membership {
+public abstract class Membership implements IEntity {
 
     	public static enum Type {
 		ML, VL, TV, PR
@@ -16,6 +16,7 @@ public abstract class Membership {
 		this.type = type;
 	}
 	
+	@Override
 	public String getDescription() {
 		return this.description;
 	}
