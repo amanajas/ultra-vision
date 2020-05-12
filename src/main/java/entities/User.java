@@ -73,4 +73,8 @@ public class User {
 	public LoyaltyPoints getLoyalty() {
 		return points;
 	}
+
+	public void setName(String name) {
+		this.name = name;		
+	}
 }

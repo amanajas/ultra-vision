@@ -221,13 +221,13 @@ public class RentStatusForm extends Window {
                     JOptionPane.showMessageDialog(this,
                             "Rental updated.",
                             "ok",
-                            JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.PLAIN_MESSAGE);
                     WindowController.getInstance().showMainWindow();
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "It was not possible to update the rental status.",
                             "warning",
-                            JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.ERROR_MESSAGE);
                 }
                 
             } catch (SQLException ex) {
@@ -248,7 +248,7 @@ public class RentStatusForm extends Window {
                     JOptionPane.showMessageDialog(this,
                             "It was not possible to find the customer by ID.",
                             "warning",
-                            JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.PLAIN_MESSAGE);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -277,7 +277,7 @@ public class RentStatusForm extends Window {
                     JOptionPane.showMessageDialog(this,
                             "It was not possible to find the rental by title.",
                             "warning",
-                            JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.PLAIN_MESSAGE);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(RentStatusForm.class.getName()).log(Level.SEVERE, null, ex);

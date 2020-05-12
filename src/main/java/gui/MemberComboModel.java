@@ -5,8 +5,7 @@
  */
 package gui;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.event.ListDataListener;
+import javax.swing.DefaultComboBoxModel;
 import entities.Membership;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,30 +14,21 @@ import java.util.List;
  *
  * @author thiago.amanajas
  */
-public class MemberComboModel implements ComboBoxModel<String>{
+public class MemberComboModel extends DefaultComboBoxModel<String> {
 
-    private List<Membership> list;
-    private int selectedItem;
-    private ListDataListener dataListener;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -601556777576051880L;
+	private List<Membership> list;
     
     public MemberComboModel() {
+    	super();
         this.list = new ArrayList<>();
-        this.selectedItem = 0;
     }
     
     public void setOptionList(List<Membership> list) {
         this.list = list;
-    }
-    
-    @Override
-    public void setSelectedItem(Object anItem) {
-        this.selectedItem = this.list.indexOf((Membership) anItem);
-    }
-
-    @Override
-    public Object getSelectedItem() {
-        if (selectedItem > -1) return this.list.get(this.selectedItem);
-        return null;
     }
 
     @Override
@@ -49,16 +39,5 @@ public class MemberComboModel implements ComboBoxModel<String>{
     @Override
     public String getElementAt(int index) {
         return this.list.get(index).getDescription();
-    }
-
-    @Override
-    public void addListDataListener(ListDataListener l) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void removeListDataListener(ListDataListener l) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    }    
 }

@@ -29,5 +29,9 @@ public class MembershipController implements IController {
     public String getEnterValue(String basedValue) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+	public Membership getMembership(String description) throws SQLException {
+		return Database.getInstance().getMembership().getByDescription(description);
+	}
     
 }

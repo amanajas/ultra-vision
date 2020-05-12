@@ -10,6 +10,7 @@ import entities.User;
 import gui.LoginWindow;
 import gui.MainWindow;
 import gui.RentStatusForm;
+import gui.UserForm;
 import gui.Window;
 import java.util.HashMap;
 
@@ -89,4 +90,30 @@ public class WindowController implements IWindowController {
             }
         });
     }
+
+	public void showUserForm() {
+		UserForm userForm = (UserForm) this.windows.get(UserForm.NAME);
+        if (userForm == null) {
+            userForm = new UserForm();
+            this.addWindow(userForm);
+        }
+        userForm.clear();
+        this.showWindow(UserForm.NAME, true);
+		
+	}
+
+	public void showRentalForm() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void showRentalSearchForm() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void showUserSearchForm() {
+		// TODO Auto-generated method stub
+		
+	}
 }

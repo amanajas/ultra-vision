@@ -6,10 +6,14 @@
 package controllers;
 
 import db.Database;
+import entities.Card;
+import entities.LoyaltyPoints;
+import entities.Membership;
 import entities.User;
 import utils.NumberUtils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,4 +42,25 @@ public class UserController implements IController {
             }
             return "";
     }
+
+	public boolean addUser(String name, String password, Membership membership) {
+		if (name.length() == 0 || password.length() == 0) return false;
+		User user = new User(-1, name, new LoyaltyPoints(), membership, new ArrayList<Card>());
+		user.setPassword(password);
+		return Database.getInstance().addCustomer(user);
+	}
+
+	public boolean updateUser(User user, String name, String password, Membership membership) {
+		if (name.length() == 0 || password.length() == 0) return false;
+		try {
+			user.setName(name);
+			user.setMembership(membership);
+			user.setPassword(password);
+			return Database.getInstance().getUser().updateUser(user);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

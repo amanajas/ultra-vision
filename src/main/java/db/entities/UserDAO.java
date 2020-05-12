@@ -25,7 +25,7 @@ public class UserDAO extends DAO implements IUserDAO {
 
 	@Override
 	public int insertUser(User user) throws SQLException {
-            String sql = "INSERT INTO users(id, name, member_id) VALUES(null, #1, #2);";
+            String sql = "INSERT INTO users(id, name, member_id) VALUES(null, '#1', #2);";
             int id = this.db.insert(sql, user.getName(), user.getMembership().getId());
             user.setId(id);
             this.db.insert(

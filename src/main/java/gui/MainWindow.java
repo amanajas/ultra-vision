@@ -23,6 +23,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import memberships.Premium;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 /**
  *
  * @author thiago.amanajas
@@ -81,20 +83,38 @@ public class MainWindow extends Window {
         addRentButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        exportDataMenuItem = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         exitMenuItem = new javax.swing.JMenuItem();
         customerMenu = new javax.swing.JMenu();
         searchCustomerMenuItem = new javax.swing.JMenuItem();
+        searchCustomerMenuItem.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		WindowController.getInstance().showUserSearchForm();
+        	}
+        });
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         addCustomerMenuItem = new javax.swing.JMenuItem();
-        updateCustomerMenuItem = new javax.swing.JMenuItem();
-        deleteCustomerMenuItem = new javax.swing.JMenuItem();
+        addCustomerMenuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		WindowController.getInstance().showUserForm();
+        	}
+        });
         rentalMenu = new javax.swing.JMenu();
         searchRentalMenuItem = new javax.swing.JMenuItem();
+        searchRentalMenuItem.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		WindowController.getInstance().showRentalSearchForm();
+        	}
+        });
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        updateRentalMenuItem = new javax.swing.JMenuItem();
         addRentalMenuItem = new javax.swing.JMenuItem();
+        addRentalMenuItem.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		WindowController.getInstance().showRentalForm();
+        	}
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ultra-Vision");
@@ -197,11 +217,6 @@ public class MainWindow extends Window {
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
 
-        exportDataMenuItem.setMnemonic('a');
-        exportDataMenuItem.setText("Export data ...");
-        fileMenu.add(exportDataMenuItem);
-        fileMenu.add(jSeparator3);
-
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -226,16 +241,6 @@ public class MainWindow extends Window {
         addCustomerMenuItem.setText("Add");
         customerMenu.add(addCustomerMenuItem);
 
-        updateCustomerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.ALT_MASK));
-        updateCustomerMenuItem.setMnemonic('p');
-        updateCustomerMenuItem.setText("Update");
-        customerMenu.add(updateCustomerMenuItem);
-
-        deleteCustomerMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.ALT_MASK));
-        deleteCustomerMenuItem.setMnemonic('d');
-        deleteCustomerMenuItem.setText("Delete");
-        customerMenu.add(deleteCustomerMenuItem);
-
         menuBar.add(customerMenu);
 
         rentalMenu.setMnemonic('h');
@@ -246,11 +251,6 @@ public class MainWindow extends Window {
         searchRentalMenuItem.setText("Search");
         rentalMenu.add(searchRentalMenuItem);
         rentalMenu.add(jSeparator2);
-
-        updateRentalMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK));
-        updateRentalMenuItem.setMnemonic('a');
-        updateRentalMenuItem.setText("Update");
-        rentalMenu.add(updateRentalMenuItem);
 
         addRentalMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.ALT_MASK));
         addRentalMenuItem.setText("Add");
@@ -315,16 +315,13 @@ public class MainWindow extends Window {
     private javax.swing.JButton addRentButton;
     private javax.swing.JMenuItem addRentalMenuItem;
     private javax.swing.JMenu customerMenu;
-    private javax.swing.JMenuItem deleteCustomerMenuItem;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JButton editSelectedRentButton;
     private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenuItem exportDataMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JTable rentStatusTable;
     private javax.swing.JScrollPane rentStatusTableScroll;
@@ -332,8 +329,6 @@ public class MainWindow extends Window {
     private javax.swing.JMenuItem searchCustomerMenuItem;
     private javax.swing.JTextField searchRentStatusField;
     private javax.swing.JMenuItem searchRentalMenuItem;
-    private javax.swing.JMenuItem updateCustomerMenuItem;
-    private javax.swing.JMenuItem updateRentalMenuItem;
     private JButton searchRentStatusButton;
     // End of variables declaration//GEN-END:variables
 

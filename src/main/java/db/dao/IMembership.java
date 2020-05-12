@@ -8,5 +8,6 @@ import java.util.List;
 public interface IMembership {
 	
 	Membership get(int membership_id) throws SQLException;
-        List<Membership> getAll();
+    List<Membership> getAll();
+    public Membership getByDescription(String description) throws SQLException; 
 }

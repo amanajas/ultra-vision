@@ -6,12 +6,20 @@
 package gui;
 
 import controllers.MembershipController;
+import controllers.UserController;
+import controllers.WindowController;
 import entities.Membership;
 import entities.User;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  *
@@ -19,8 +27,13 @@ import javax.swing.ComboBoxModel;
  */
 public class UserForm extends Window {
 
-    public static final String NAME = "userForm";
-    private final MembershipController membership;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6058448480821053779L;
+	public static final String NAME = "userForm";
+    private final MembershipController membershipController;
+    private final UserController userController;
     private User user;
     /**
      * Creates new form UserForm
@@ -29,7 +42,8 @@ public class UserForm extends Window {
         super(NAME);
         initComponents();
         this.user = null;
-        this.membership = new MembershipController();
+        this.userController = new UserController();
+        this.membershipController = new MembershipController();
     }
 
     /**
@@ -48,9 +62,46 @@ public class UserForm extends Window {
         jLabel3 = new javax.swing.JLabel();
         passwordField = new javax.swing.JPasswordField();
         cancelButton = new javax.swing.JButton();
+        cancelButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		formWindowClosed(null);
+        	}
+        });
         saveButton = new javax.swing.JButton();
+        saveButton.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		String name = nameField.getText();
+        		String password = String.valueOf(passwordField.getPassword());
+        		Membership membership;
+				try {
+					membership = membershipController.getMembership((String) membershipTypeCombo.getSelectedItem());
+	        		boolean operation;
+	        		if (user == null) {
+	        			operation = userController.addUser(name, password, membership);
+	        		} else {
+	        			operation = userController.updateUser(user, name, password, membership);
+	        		}
+	        		if (!operation) {
+	        			JOptionPane.showMessageDialog(UserForm.this,
+	                            "It was not possible to save the customer.",
+	                            "warning",
+	                            JOptionPane.ERROR_MESSAGE);
+	        		} else {
+	        			JOptionPane.showMessageDialog(UserForm.this,
+	                            "The customer was saved.",
+	                            "info",
+	                            JOptionPane.PLAIN_MESSAGE);
+	        			formWindowClosed(null);
+	        		}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+        	}
+        });
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Customer form");
         setAlwaysOnTop(true);
         setLocationByPlatform(true);
@@ -72,6 +123,12 @@ public class UserForm extends Window {
         cancelButton.setText("Cancel");
 
         saveButton.setText("Save");
+        
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -121,6 +178,11 @@ public class UserForm extends Window {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.user = null;
+        WindowController.getInstance().showMainWindow();
+    }//GEN-LAST:event_formWindowClosed
+    
     private void membershipTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_membershipTypeComboActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_membershipTypeComboActionPerformed
@@ -159,7 +221,7 @@ public class UserForm extends Window {
     private void refreshCombo() {
         try {
             MemberComboModel model = new MemberComboModel();
-            model.setOptionList(this.membership.getAll());
+            model.setOptionList(this.membershipController.getAll());
             this.membershipTypeCombo.setModel(model);
         } catch (SQLException ex) {
             Logger.getLogger(UserForm.class.getName()).log(Level.SEVERE, null, ex);

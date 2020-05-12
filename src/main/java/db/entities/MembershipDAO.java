@@ -73,4 +73,15 @@ public class MembershipDAO extends DAO implements IMembership {
         return this.getType(result);
     }
 
+	public Membership getByDescription(String description) throws SQLException {
+		List<Map<String, Object>> result = this.db.query("SELECT m.id AS id, "
+                + "m.description AS description, "
+                + "t.description AS type "
+                + "FROM memberships AS m "
+                + "JOIN membership_type AS t ON t.id = m.type_id "
+                + "WHERE m.description='#1';", description);
+		List<Membership> list = this.getType(result);
+        return list.size() > 0 ? list.get(0) : null;
+	}
+
 }
