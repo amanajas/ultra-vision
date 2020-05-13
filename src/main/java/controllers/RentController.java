@@ -131,5 +131,13 @@ public class RentController implements IController{
 		}
 		return false;
 	}
+
+	public List<Rental> getAllRentals() throws SQLException {
+		return Database.getInstance().getRental().getAll();
+	}
+
+	public List<Rental> getRentsByTitle(String search) {
+		return Database.getInstance().searchRental(search);
+	}
     
 }

@@ -63,4 +63,12 @@ public class UserController implements IController {
 		}
 		return false;
 	}
+
+	public List<User> getAll() throws SQLException {
+		return Database.getInstance().getUser().getAll();
+	}
+
+	public List<User> getUsersByName(String search) throws SQLException {
+		return Database.getInstance().searchCustomer(search);
+	}
 }
