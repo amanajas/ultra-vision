@@ -61,7 +61,7 @@ public class RentController implements IController{
     private List<RentalStatus> checkPermissionList(List<RentalStatus> list, List<RentalStatus> perm, Membership membership) {
     	String access = membership.getRules().getAccessString();
     	list.forEach((map) -> {
-    		String cat = map.getRental().getCategory().toString();
+    		String cat = map.getRental().getCategory().getDescription();
     		if (access.contains(cat)) {
     			perm.add(map);
     		}
