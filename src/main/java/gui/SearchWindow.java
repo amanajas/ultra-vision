@@ -8,16 +8,18 @@ package gui;
 import controllers.RentController;
 import controllers.UserController;
 import controllers.WindowController;
+import entities.IEntity;
 import entities.Rental;
-import entities.RentalStatus;
 import entities.User;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.table.TableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 
@@ -48,7 +50,7 @@ public class SearchWindow extends Window {
     
     public final void refreshListRent() {
         try {
-            this.rentStatusTable.setModel(new RentTable(
+            this.searchTable.setModel(new RentTable(
                     this.rentController.getAllRentals()));
         } catch (SQLException ex) {
             Logger.getLogger(SearchWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,12 +58,12 @@ public class SearchWindow extends Window {
     }
     
     public final void refreshListRent(List<Rental> list) {
-        this.rentStatusTable.setModel(new RentTable(list));
+        this.searchTable.setModel(new RentTable(list));
     }
     
     public final void refreshListUser() {
         try {
-            this.rentStatusTable.setModel(new UserTable(
+            this.searchTable.setModel(new UserTable(
                     this.userController.getAll()));
         } catch (SQLException ex) {
             Logger.getLogger(SearchWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -69,8 +71,18 @@ public class SearchWindow extends Window {
     }
     
     public final void refreshListUser(List<User> list) {
-        this.rentStatusTable.setModel(new UserTable(list));
+        this.searchTable.setModel(new UserTable(list));
     }
+    
+    public void setRentalSearch() {
+    	this.searchRentalRadioButton.setSelected(true);
+    	this.refreshListRent();
+	}
+
+	public void setUserSearch() {
+		this.searchUserRadioButton.setSelected(true);
+		this.refreshListUser();
+	}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -81,16 +93,22 @@ public class SearchWindow extends Window {
     private void initComponents() {
 
         desktopPane = new javax.swing.JDesktopPane();
-        rentStatusTableScroll = new javax.swing.JScrollPane();
-        rentStatusTable = new javax.swing.JTable();
-        searchRentStatusField = new javax.swing.JTextField();
+        searchTableScroll = new javax.swing.JScrollPane();
+        searchTable = new javax.swing.JTable();
+        searchField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        editSelectedRentButton = new javax.swing.JButton();
+        editSelectedItemButton = new javax.swing.JButton();
 
-        JRadioButton searchUserRadioButton = new JRadioButton("Customer");
+        searchUserRadioButton = new JRadioButton("Customer");
         searchUserRadioButton.setSelected(true);
         
-        JRadioButton searchRentalRadioButton = new JRadioButton("Rental");
+        searchRentalRadioButton = new JRadioButton("Rental");
+        
+        ButtonGroup group = new ButtonGroup();
+        
+        group.add(searchUserRadioButton);
+        group.add(searchRentalRadioButton);
+        
         
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ultra-Vision");
@@ -108,33 +126,33 @@ public class SearchWindow extends Window {
 
         desktopPane.setBackground(java.awt.Color.white);
 
-        rentStatusTable.setFocusable(false);
-        rentStatusTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        rentStatusTable.getTableHeader().setReorderingAllowed(false);
-        rentStatusTableScroll.setViewportView(rentStatusTable);
-        rentStatusTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        searchTable.setFocusable(false);
+        searchTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        searchTable.getTableHeader().setReorderingAllowed(false);
+        searchTableScroll.setViewportView(searchTable);
+        searchTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        searchRentStatusField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        searchRentStatusField.setToolTipText("Search rent status by Title or Customer name");
+        searchField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        searchField.setToolTipText("Search rent status by Title or Customer name");
 
         jLabel1.setText("Search rent status:");
 
-        editSelectedRentButton.setText("Edit selected value");
-        editSelectedRentButton.addActionListener(new java.awt.event.ActionListener() {
+        editSelectedItemButton.setText("Edit selected value");
+        editSelectedItemButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editSelectedRentButtonActionPerformed(evt);
             }
         });
 
-        desktopPane.setLayer(rentStatusTableScroll, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        desktopPane.setLayer(searchRentStatusField, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktopPane.setLayer(searchTableScroll, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktopPane.setLayer(searchField, javax.swing.JLayeredPane.DEFAULT_LAYER);
         desktopPane.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        desktopPane.setLayer(editSelectedRentButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        desktopPane.setLayer(editSelectedItemButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
         
-        searchRentStatusButton = new JButton();
-        searchRentStatusButton.addActionListener(new ActionListener() {
+        searchButton = new JButton();
+        searchButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		String search = searchRentStatusField.getText();
+        		String search = searchField.getText();
         		try {
         			if (searchUserRadioButton.isSelected()) {        			
         				List<User> list = userController.getUsersByName(search);
@@ -149,7 +167,7 @@ public class SearchWindow extends Window {
 				}
         	}
         });
-        searchRentStatusButton.setText("Search");
+        searchButton.setText("Search");
         
 
         javax.swing.GroupLayout desktopPaneLayout = new javax.swing.GroupLayout(desktopPane);
@@ -159,11 +177,11 @@ public class SearchWindow extends Window {
         			.addGap(12)
         			.addGroup(desktopPaneLayout.createParallelGroup(Alignment.LEADING)
         				.addGroup(desktopPaneLayout.createSequentialGroup()
-        					.addComponent(searchRentStatusField, GroupLayout.PREFERRED_SIZE, 455, GroupLayout.PREFERRED_SIZE)
+        					.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 455, GroupLayout.PREFERRED_SIZE)
         					.addPreferredGap(ComponentPlacement.RELATED)
-        					.addComponent(searchRentStatusButton)
+        					.addComponent(searchButton)
         					.addGap(82)
-        					.addComponent(editSelectedRentButton))
+        					.addComponent(editSelectedItemButton))
         				.addGroup(desktopPaneLayout.createSequentialGroup()
         					.addComponent(jLabel1)
         					.addGap(18)
@@ -171,7 +189,7 @@ public class SearchWindow extends Window {
         					.addPreferredGap(ComponentPlacement.RELATED)
         					.addComponent(searchRentalRadioButton)))
         			.addContainerGap(322, Short.MAX_VALUE))
-        		.addComponent(rentStatusTableScroll, GroupLayout.DEFAULT_SIZE, 905, Short.MAX_VALUE)
+        		.addComponent(searchTableScroll, GroupLayout.DEFAULT_SIZE, 905, Short.MAX_VALUE)
         );
         desktopPaneLayout.setVerticalGroup(
         	desktopPaneLayout.createParallelGroup(Alignment.LEADING)
@@ -183,11 +201,11 @@ public class SearchWindow extends Window {
         				.addComponent(searchRentalRadioButton))
         			.addPreferredGap(ComponentPlacement.RELATED)
         			.addGroup(desktopPaneLayout.createParallelGroup(Alignment.BASELINE)
-        				.addComponent(searchRentStatusField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
-        				.addComponent(editSelectedRentButton)
-        				.addComponent(searchRentStatusButton))
+        				.addComponent(searchField, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(editSelectedItemButton)
+        				.addComponent(searchButton))
         			.addPreferredGap(ComponentPlacement.RELATED)
-        			.addComponent(rentStatusTableScroll, GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE))
+        			.addComponent(searchTableScroll, GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE))
         );
         desktopPane.setLayout(desktopPaneLayout);
 
@@ -211,19 +229,28 @@ public class SearchWindow extends Window {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        WindowController.getInstance().showLogin();
+        WindowController.getInstance().showMainWindow();;
     }//GEN-LAST:event_formWindowClosed
 
     private void editSelectedRentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSelectedRentButtonActionPerformed
-        // TODO: Put user and rental selected into the form
-        int selectedRow = this.rentStatusTable.getSelectedRow();
+        int selectedRow = this.searchTable.getSelectedRow();
         System.out.println("ROW: " + selectedRow);
         if (selectedRow >= 0) {
-            RentalStatus selectedTitleValue = (RentalStatus) (
-                    (RentStatusTable)this.rentStatusTable.getModel()
-                    ).getRow(selectedRow);
+        	TableModel model = this.searchTable.getModel();
+        	IEntity selectedTitleValue;
+        	boolean isUserEdit = false;
+        	if (model instanceof UserTable) {
+        		isUserEdit = true;
+        		selectedTitleValue = ((UserTable)model).getRow(selectedRow);
+        	} else {
+        		selectedTitleValue = ((RentTable)model).getRow(selectedRow);
+        	}
             if (selectedTitleValue != null) {
-                WindowController.getInstance().showRentStatusForm(selectedTitleValue);
+            	if (isUserEdit) {
+            		WindowController.getInstance().showUserForm((User) selectedTitleValue);
+            	} else {
+            		WindowController.getInstance().showRentalForm((Rental) selectedTitleValue);
+            	}
             }
         }
     }//GEN-LAST:event_editSelectedRentButtonActionPerformed
@@ -232,12 +259,14 @@ public class SearchWindow extends Window {
     }//GEN-LAST:event_formWindowActivated
     
 	private javax.swing.JDesktopPane desktopPane;
-    private javax.swing.JButton editSelectedRentButton;
+    private javax.swing.JButton editSelectedItemButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTable rentStatusTable;
-    private javax.swing.JScrollPane rentStatusTableScroll;
-    private javax.swing.JTextField searchRentStatusField;
-    private JButton searchRentStatusButton;
+    private javax.swing.JTable searchTable;
+    private javax.swing.JScrollPane searchTableScroll;
+    private javax.swing.JTextField searchField;
+    private JButton searchButton;
+    private JRadioButton searchUserRadioButton;
+    private JRadioButton searchRentalRadioButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -247,6 +276,6 @@ public class SearchWindow extends Window {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        searchField.setText("");
     }
 }
