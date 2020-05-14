@@ -211,7 +211,7 @@ public class RentalForm extends Window {
 
     private void refreshCombo(IEntity category) {
         refreshCombo();
-        this.categoryCombo.setSelectedItem(category);
+        this.categoryCombo.setSelectedItem(category.getDescription());
     }
 
 }

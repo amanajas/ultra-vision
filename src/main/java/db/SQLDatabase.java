@@ -137,7 +137,6 @@ public class SQLDatabase {
                     }
                     records.add(map);
                 }
-                System.out.println(records.toString());
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             } finally {

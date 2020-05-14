@@ -71,7 +71,7 @@ public class UserDAO extends DAO implements IUserDAO {
 	public List<User> getAll() throws SQLException {
 		List<Map<String, Object>> result = this.db.query("SELECT u.id AS id, u.name AS name, "
                         + "u.member_id AS mid "
-                        + "FROM users;");
+                        + "FROM users AS u;");
 		
 		List<User> list = new ArrayList<>();
                 for(Map<String, Object> map : result){

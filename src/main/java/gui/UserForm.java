@@ -208,7 +208,6 @@ public class UserForm extends Window {
     public void openUser(User user) {
         this.user = user;
         this.nameField.setText(user.getName());
-        this.passwordField.setText(user.getPassword());
         refreshCombo(user.getMembership());
     }
 
@@ -230,7 +229,7 @@ public class UserForm extends Window {
 
     private void refreshCombo(Membership membership) {
         refreshCombo();
-        this.membershipTypeCombo.setSelectedItem(membership);
+        this.membershipTypeCombo.setSelectedItem(membership.getDescription());
     }
 
 }
